@@ -28,7 +28,7 @@
 
 ## GitHub 與 Cloudflare 上線
 
-1. 在 GitHub 建立私人 repository，將本資料夾內容推送上去。
+1. 在 GitHub 建立 repository（公開或私人皆可），將本資料夾內容推送上去。
 2. 安裝依賴後先執行 `pnpm check` 與 `pnpm build`。
 3. 建立 D1：`npx wrangler d1 create after-school-club-registration --location=apac`。
 4. 把指令回傳的 `database_id` 填入 `wrangler.jsonc`。
