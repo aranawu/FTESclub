@@ -97,6 +97,9 @@ assert.equal(duplicate.status, 409);
 const invalidDays = await register({ request: post('http://local/api/register', { studentName: '另一學生', grade: '2年級', studentId: 'F123456782', guardianPhone: '0912345678', guardianEmail: 'parent@example.com', clubs: ['flute', 'diabolo'] }), env });
 assert.equal(invalidDays.status, 400);
 
+const invalidDiaboloGrade = await register({ request: post('http://local/api/register', { studentName: '另一學生', grade: '2年級', studentId: 'F123456782', guardianPhone: '0912345678', guardianEmail: 'parent@example.com', clubs: ['diabolo'] }), env });
+assert.equal(invalidDiaboloGrade.status, 400);
+
 assert.equal((await login({ request: post('http://local/api/admin/login', { username: 'admin', password: 'wrong' }), env })).status, 401);
 const loggedIn = await login({ request: post('http://local/api/admin/login', { username: 'admin', password: env.ADMIN_PASSWORD }), env });
 assert.equal(loggedIn.status, 200);
