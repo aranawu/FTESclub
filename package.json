@@ -1,0 +1,19 @@
+{
+  "name": "after-school-club-registration",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.19.0",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/check.mjs",
+    "test": "node scripts/integration.mjs",
+    "db:local": "wrangler d1 execute after-school-club-registration --local --file=./db/schema.sql",
+    "db:remote": "wrangler d1 execute after-school-club-registration --remote --file=./db/schema.sql",
+    "dev": "node scripts/build.mjs && wrangler pages dev dist",
+    "deploy": "node scripts/build.mjs && wrangler pages deploy dist --project-name=after-school-club-registration"
+  },
+  "devDependencies": {
+    "wrangler": "4.33.1"
+  }
+}

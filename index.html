@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="115學年度課後社團線上報名">
+  <title>115學年度課後社團報名</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <p class="eyebrow">115 學年度 · 課後社團</p>
+      <h1>線上報名</h1>
+      <p>每位學生星期三、星期五各至多選擇一個社團；超額名額由學校人工審核。</p>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <div id="systemNotice" class="notice info"><strong>資料保護：</strong>身分證字號只用於防止重複報名，後端僅保存不可逆識別碼與遮罩，不保存明碼。</div>
+
+    <section class="card intro-card">
+      <div>
+        <p class="eyebrow dark">報名前請留意</p>
+        <h2>週三、週五可各選一個</h2>
+        <p>同一天不能報名兩個社團，不使用志願序，也不處理收費。送出後會寄發報名收件通知，人工審核完成後再寄發結果。</p>
+      </div>
+      <div class="rule-grid">
+        <div><span class="rule-day">週三</span><strong>最多 1 個</strong></div>
+        <div><span class="rule-day">週五</span><strong>最多 1 個</strong></div>
+        <div><span class="rule-day">超額</span><strong>人工篩選＋候補</strong></div>
+      </div>
+    </section>
+
+    <form id="registrationForm" class="form-stack" novalidate>
+      <section class="card">
+        <div class="section-heading"><span class="step">1</span><div><p class="eyebrow dark">學生資料</p><h2>確認學生與聯絡資料</h2></div></div>
+        <div class="field-grid">
+          <label>學生姓名<input id="studentName" name="studentName" required maxlength="40" autocomplete="name" placeholder="例如：王小明"></label>
+          <label>年級<select id="grade" name="grade" required><option value="">請選擇</option><option>1年級</option><option>2年級</option><option>3年級</option><option>4年級</option><option>5年級</option><option>6年級</option></select></label>
+          <label>學生身分證字號<input id="studentId" name="studentId" required maxlength="10" autocomplete="off" placeholder="A123456789" spellcheck="false"><small>傳送時使用 HTTPS；後端不保存明碼。</small></label>
+          <label>家長聯絡電話<input id="guardianPhone" name="guardianPhone" required maxlength="20" autocomplete="tel" placeholder="09xxxxxxxx"></label>
+          <label class="field-span">家長電子郵件<input id="guardianEmail" name="guardianEmail" type="email" required maxlength="120" autocomplete="email" placeholder="parent@example.com"><small>報名收件通知與錄取／候補結果將寄到此信箱。</small></label>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-heading"><span class="step">2</span><div><p class="eyebrow dark">選擇社團</p><h2>每個上課日最多一個</h2></div></div>
+        <div id="clubChoices" class="choice-grid" aria-live="polite"><p class="loading">正在載入社團資料…</p></div>
+        <p class="helper">至少選擇一個社團；也可以星期三與星期五各選一個。</p>
+      </section>
+
+      <section class="card consent-card">
+        <label class="checkbox-label"><input id="consent" type="checkbox" required><span>我確認資料正確，並同意學校將資料用於社團報名、人工審核、錄取通知與候補聯繫。</span></label>
+        <button id="submitButton" class="primary-button" type="submit" disabled>送出報名</button>
+        <div id="formMessage" class="form-message" role="status" aria-live="polite"></div>
+      </section>
+    </form>
+
+    <section id="successPanel" class="card success-card hidden" aria-live="polite"></section>
+    <footer class="site-footer"><span>115學年度課後社團報名系統</span><span>個資僅供本次社團業務使用</span></footer>
+  </main>
+  <script src="app.js" defer></script>
+</body>
+</html>

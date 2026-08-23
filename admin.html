@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>社團報名管理</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="hero compact-hero"><div class="hero-inner"><p class="eyebrow">115 學年度 · 承辦人工作區</p><h1>報名管理</h1><p>人工審核、結果寄送、候補管理與個別通知單列印。</p></div></header>
+  <main class="page-shell">
+    <section id="loginPanel" class="card auth-card">
+      <p class="eyebrow dark">管理者驗證</p>
+      <h2>管理者帳號登入</h2>
+      <p class="helper">帳號與密碼由後端驗證；登入成功後，此分頁只暫存有效 8 小時的登入憑證。</p>
+      <form id="loginForm" class="auth-form">
+        <label>管理者帳號<input id="adminUsername" type="text" value="admin" required autocomplete="username"></label>
+        <label>管理者密碼<input id="adminPassword" type="password" required autocomplete="current-password"></label>
+        <button class="primary-button" type="submit">登入管理頁</button>
+      </form>
+      <div id="loginMessage" class="form-message" role="status"></div>
+    </section>
+
+    <div id="adminPanel" class="hidden">
+      <section class="toolbar card">
+        <div><p class="eyebrow dark">目前資料</p><h2 id="summaryTitle">正在載入…</h2><p id="summaryText" class="helper"></p></div>
+        <div class="toolbar-actions"><button id="refreshData" class="secondary-button">重新整理</button><button id="exportCsv" class="secondary-button">匯出 CSV</button><button id="logout" class="danger-button">登出</button></div>
+      </section>
+      <div id="adminMessage" class="form-message" role="status" aria-live="polite"></div>
+      <section id="adminGroups" class="admin-groups"></section>
+    </div>
+    <footer class="site-footer"><a href="index.html">回到家長報名頁</a><span>請勿共用管理帳號或密碼</span></footer>
+  </main>
+  <script src="admin.js" defer></script>
+</body>
+</html>

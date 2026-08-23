@@ -1,0 +1,4 @@
+ADMIN_PASSWORD="請填管理者密碼"
+ADMIN_SESSION_SECRET="請填至少32字元的隨機登入簽章密鑰"
+ID_HASH_PEPPER="請改成另一組至少32字元的隨機字串"
+RESEND_API_KEY="re_請填入Resend金鑰"

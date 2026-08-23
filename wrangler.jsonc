@@ -1,0 +1,19 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "after-school-club-registration",
+  "pages_build_output_dir": "./dist",
+  "compatibility_date": "2026-08-23",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "after-school-club-registration",
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "preview_database_id": "DB"
+    }
+  ],
+  "vars": {
+    "SCHOOL_NAME": "請替換為學校名稱",
+    "FROM_EMAIL": "社團報名系統 <noreply@example.com>",
+    "ADMIN_USERNAME": "admin"
+  }
+}
