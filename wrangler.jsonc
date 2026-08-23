@@ -13,7 +13,7 @@
   ],
   "vars": {
     "SCHOOL_NAME": "豐田國小",
-    "FROM_EMAIL": "社團報名系統 <noreply@example.com>",
+    "FROM_NAME": "豐田國小社團報名系統",
     "ADMIN_USERNAME": "admin"
   }
 }
