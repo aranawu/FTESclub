@@ -6,6 +6,7 @@ import { onRequestPost as decide } from '../functions/api/admin/decision.js';
 import { onRequestGet as notice } from '../functions/api/admin/notice.js';
 import { onRequestGet as classNotices } from '../functions/api/admin/class-notices.js';
 import { onRequestPost as updateRegistration } from '../functions/api/admin/registration.js';
+import { CLUB_MAP } from '../lib/clubs.js';
 
 class Statement {
   constructor(db, sql) { this.db = db; this.sql = sql.replace(/\s+/g, ' ').trim(); this.args = []; }
@@ -129,6 +130,9 @@ const decision = await decided.json();
 assert.equal(decision.registration.choices.find((choice) => choice.clubId === 'flute').status, 'accepted');
 assert.equal(decision.emailSent, false);
 
+const rejectedDecision = await decide({ request: post('http://local/api/admin/decision', { registrationNo: submission.registrationNo, clubId: 'yushan-english', status: 'rejected' }, adminHeaders), env });
+assert.equal(rejectedDecision.status, 200);
+
 const printed = await notice({ request: new Request(`http://local/api/admin/notice?registrationNo=${submission.registrationNo}`, { headers: adminHeaders }), env });
 assert.equal(printed.status, 200);
 const printedHtml = await printed.text();
@@ -151,6 +155,12 @@ assert.ok(classPrintedHtml.includes('<th>班級</th>'));
 assert.ok(classPrintedHtml.includes('<th>開始日期</th>'));
 assert.ok(classPrintedHtml.includes('<th>地點</th>'));
 assert.ok(classPrintedHtml.includes('115/9/9（三）'));
-assert.ok(classPrintedHtml.includes('待公告'));
+assert.ok(classPrintedHtml.includes('音樂教室'));
+assert.ok(classPrintedHtml.includes('class="name-only"'));
+assert.equal(CLUB_MAP.get('flute').location, '音樂教室');
+assert.equal(CLUB_MAP.get('diabolo').location, '活動中心');
+assert.equal(CLUB_MAP.get('young-english').location, '多功能教室');
+assert.equal(CLUB_MAP.get('yushan-english').location, '音樂教室');
+assert.equal(CLUB_MAP.get('table-tennis').location, '活動中心B1');
 
 console.log('Integration test passed: registration, duplicate protection, validation, admin auth, review, individual notice, and class notices.');
