@@ -143,5 +143,9 @@ assert.ok(classPrintedHtml.includes('課後社團班級通知單'));
 assert.ok(classPrintedHtml.includes('2年級'));
 assert.ok(classPrintedHtml.includes('彩虹班'));
 assert.ok(classPrintedHtml.includes('測試學生'));
+assert.ok(classPrintedHtml.includes('已錄取名單'));
+assert.ok(classPrintedHtml.includes('候補／審核中'));
+assert.ok(classPrintedHtml.includes('未錄取名單'));
+assert.ok(classPrintedHtml.includes('請依上課日準時參加社團活動'));
 
 console.log('Integration test passed: registration, duplicate protection, validation, admin auth, review, individual notice, and class notices.');
