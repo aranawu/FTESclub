@@ -147,5 +147,10 @@ assert.ok(classPrintedHtml.includes('已錄取名單'));
 assert.ok(classPrintedHtml.includes('候補／審核中'));
 assert.ok(classPrintedHtml.includes('未錄取名單'));
 assert.ok(classPrintedHtml.includes('請依上課日準時參加社團活動'));
+assert.ok(classPrintedHtml.includes('<th>班級</th>'));
+assert.ok(classPrintedHtml.includes('<th>開始日期</th>'));
+assert.ok(classPrintedHtml.includes('<th>地點</th>'));
+assert.ok(classPrintedHtml.includes('115/9/9（三）'));
+assert.ok(classPrintedHtml.includes('待公告'));
 
 console.log('Integration test passed: registration, duplicate protection, validation, admin auth, review, individual notice, and class notices.');
