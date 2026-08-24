@@ -5,6 +5,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const modules = [
   "lib/clubs.js",
+  "lib/class-notices.js",
   "lib/data.js",
   "lib/email.js",
   "lib/http.js",
@@ -16,6 +17,9 @@ const modules = [
   "functions/api/admin/registrations.js",
   "functions/api/admin/decision.js",
   "functions/api/admin/notice.js",
+  "functions/api/admin/notices.js",
+  "functions/api/admin/class-notices.js",
+  "functions/api/admin/registration.js",
 ];
 const projectFiles = [
   "index.html",

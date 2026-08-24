@@ -6,6 +6,7 @@ import { onRequestPost as decide } from '../functions/api/admin/decision.js';
 import { onRequestGet as notice } from '../functions/api/admin/notice.js';
 import { onRequestGet as classNotices } from '../functions/api/admin/class-notices.js';
 import { onRequestPost as updateRegistration } from '../functions/api/admin/registration.js';
+import { onRequestPost as batchNotices } from '../functions/api/admin/notices.js';
 import { CLUB_MAP } from '../lib/clubs.js';
 
 class Statement {
@@ -159,10 +160,25 @@ assert.ok(classPrintedHtml.includes('<th>地點</th>'));
 assert.ok(classPrintedHtml.includes('115/9/9（三）'));
 assert.ok(classPrintedHtml.includes('音樂教室'));
 assert.ok(classPrintedHtml.includes('class="name-only"'));
+assert.ok(classPrintedHtml.includes('每位學生報名彙整'));
+assert.ok(classPrintedHtml.includes('星期三報名／結果'));
+assert.ok(classPrintedHtml.includes('星期五報名／結果'));
 assert.equal(CLUB_MAP.get('flute').location, '音樂教室');
 assert.equal(CLUB_MAP.get('diabolo').location, '活動中心');
 assert.equal(CLUB_MAP.get('young-english').location, '多功能教室');
 assert.equal(CLUB_MAP.get('yushan-english').location, '音樂教室');
 assert.equal(CLUB_MAP.get('table-tennis').location, '活動中心B1');
+
+const secondSubmitted = await register({ request: post('http://local/api/register', { studentName: '第二位學生', grade: '3年級', className: '甲班', studentId: 'A223456781', guardianPhone: '0912345678', guardianEmail: 'parent2@example.com', clubs: ['flute', 'table-tennis'] }), env });
+assert.equal(secondSubmitted.status, 201);
+const secondSubmission = await secondSubmitted.json();
+
+const batchPrinted = await batchNotices({ request: post('http://local/api/admin/notices', { registrationNos: [submission.registrationNo, secondSubmission.registrationNo] }, adminHeaders), env });
+assert.equal(batchPrinted.status, 200);
+const batchPrintedHtml = await batchPrinted.text();
+assert.ok(batchPrintedHtml.includes('測試學生'));
+assert.ok(batchPrintedHtml.includes('第二位學生'));
+assert.equal((batchPrintedHtml.match(/class="sheet"/g) || []).length, 2);
+assert.ok(batchPrintedHtml.includes('列印／另存 PDF（共 2 位）'));
 
 console.log('Integration test passed: registration, duplicate protection, validation, admin auth, review, individual notice, and class notices.');

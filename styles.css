@@ -69,6 +69,8 @@ code { background:#eef2f6; border-radius:5px; padding:2px 5px; }
 .applicant-row:last-child { border-bottom:0; }
 .applicant-main { display:grid; gap:2px; }
 .applicant-main span,.applicant-main small { color:var(--muted); font-size:.85rem; }
+.notice-select { display:flex; align-items:center; gap:6px; width:max-content; color:#39713c; font-size:.78rem; font-weight:800; cursor:pointer; }
+.notice-select input { width:auto; margin:0; accent-color:#4d873c; }
 .inline-edit-button { display:inline; width:auto; padding:2px 8px; border:1px dashed #9fb870; border-radius:999px; color:#39713c; background:#f2f7e7; font-size:.82rem; }
 .applicant-actions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end; }
 .applicant-actions select { width:auto; min-width:100px; padding:7px 9px; }

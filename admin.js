@@ -5,6 +5,7 @@ const adminMessage = document.getElementById('adminMessage');
 let adminSession = sessionStorage.getItem('clubAdminSession') || '';
 let clubs = [];
 let registrations = [];
+const selectedNoticeNos = new Set();
 
 function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[char]);
@@ -41,6 +42,8 @@ async function loadData() {
   ]);
   clubs = clubData.clubs;
   registrations = registrationData.registrations;
+  const available = new Set(registrations.map((registration) => registration.registrationNo));
+  [...selectedNoticeNos].forEach((registrationNo) => { if (!available.has(registrationNo)) selectedNoticeNos.delete(registrationNo); });
   renderAdmin();
   setMessage('');
 }
@@ -65,13 +68,16 @@ function renderAdmin() {
   document.querySelectorAll('[data-save]').forEach((button) => button.addEventListener('click', () => saveDecision(button)));
   document.querySelectorAll('[data-print]').forEach((button) => button.addEventListener('click', () => printNotice(button.dataset.print)));
   document.querySelectorAll('[data-edit-class]').forEach((button) => button.addEventListener('click', () => editClass(button)));
+  document.querySelectorAll('[data-select-notice]').forEach((checkbox) => checkbox.addEventListener('change', () => setNoticeSelection(checkbox.value, checkbox.checked)));
+  updateNoticeSelectionControls();
 }
 
 function applicantHtml(registration, choice) {
   const selected = (value) => choice.status === value ? 'selected' : '';
   const waitlistHidden = choice.status === 'waitlist' ? '' : 'hidden';
+  const noticeChecked = selectedNoticeNos.has(registration.registrationNo) ? 'checked' : '';
   return `<div class="applicant-row" data-row="${escapeHtml(registration.registrationNo)}-${escapeHtml(choice.clubId)}">
-    <div class="applicant-main"><strong>${escapeHtml(registration.studentName)}</strong><span>${escapeHtml(registration.grade)} <button class="inline-edit-button" data-edit-class data-registration="${escapeHtml(registration.registrationNo)}" data-class-name="${escapeHtml(registration.className || '')}" type="button">${escapeHtml(registration.className || '班級未設定')} ✎</button> · ${escapeHtml(registration.studentIdMasked)} · ${escapeHtml(registration.guardianPhone)}</span><small>${escapeHtml(registration.guardianEmail)} · 報名編號 ${escapeHtml(registration.registrationNo)}</small></div>
+    <div class="applicant-main"><label class="notice-select"><input data-select-notice type="checkbox" value="${escapeHtml(registration.registrationNo)}" ${noticeChecked}>選取個人通知單</label><strong>${escapeHtml(registration.studentName)}</strong><span>${escapeHtml(registration.grade)} <button class="inline-edit-button" data-edit-class data-registration="${escapeHtml(registration.registrationNo)}" data-class-name="${escapeHtml(registration.className || '')}" type="button">${escapeHtml(registration.className || '班級未設定')} ✎</button> · ${escapeHtml(registration.studentIdMasked)} · ${escapeHtml(registration.guardianPhone)}</span><small>${escapeHtml(registration.guardianEmail)} · 報名編號 ${escapeHtml(registration.registrationNo)}</small></div>
     <div class="applicant-actions">
       <select data-status aria-label="${escapeHtml(registration.studentName)}審核結果"><option value="pending" ${selected('pending')}>待審核</option><option value="accepted" ${selected('accepted')}>錄取</option><option value="waitlist" ${selected('waitlist')}>候補</option><option value="rejected" ${selected('rejected')}>未錄取</option></select>
       <input class="candidate-input ${waitlistHidden}" data-waitlist type="number" min="1" value="${escapeHtml(choice.waitlistNo || '')}" placeholder="候補序號" ${choice.status === 'waitlist' ? '' : 'disabled'}>
@@ -80,6 +86,23 @@ function applicantHtml(registration, choice) {
     </div>
     <small class="email-state">目前：${escapeHtml(statusText(choice.status, choice.waitlistNo))}${choice.resultEmailSentAt ? ` · 已寄信 ${new Date(choice.resultEmailSentAt).toLocaleString('zh-TW')}` : ''}</small>
   </div>`;
+}
+
+function setNoticeSelection(registrationNo, checked) {
+  if (checked) selectedNoticeNos.add(registrationNo);
+  else selectedNoticeNos.delete(registrationNo);
+  document.querySelectorAll('[data-select-notice]').forEach((checkbox) => {
+    if (checkbox.value === registrationNo) checkbox.checked = checked;
+  });
+  updateNoticeSelectionControls();
+}
+
+function updateNoticeSelectionControls() {
+  const count = selectedNoticeNos.size;
+  const batchButton = document.getElementById('batchNotices');
+  batchButton.disabled = count === 0;
+  batchButton.textContent = `列印個人通知單（${count}）`;
+  document.getElementById('selectAllNotices').textContent = registrations.length > 0 && count === registrations.length ? '清除全選' : '全選學生';
 }
 
 async function editClass(button) {
@@ -127,9 +150,18 @@ async function printNotice(registrationNo) {
   return openPrintable(`/api/admin/notice?registrationNo=${encodeURIComponent(registrationNo)}`, '無法產生個別通知單。');
 }
 
-async function openPrintable(path, fallbackMessage) {
+async function printSelectedNotices() {
+  if (!selectedNoticeNos.size) return setMessage('請先勾選要列印的學生。', 'error');
+  return openPrintable('/api/admin/notices', '無法產生批次個人通知單。', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ registrationNos: [...selectedNoticeNos] }),
+  });
+}
+
+async function openPrintable(path, fallbackMessage, options = {}) {
   try {
-    const response = await fetch(path, { headers: { authorization: `Bearer ${adminSession}` } });
+    const response = await fetch(path, { ...options, headers: { authorization: `Bearer ${adminSession}`, ...(options.headers || {}) } });
     if (!response.ok) { const data = await response.json(); throw new Error(data.error || fallbackMessage); }
     const html = await response.text();
     const url = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
@@ -167,6 +199,13 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
 
 document.getElementById('refreshData').addEventListener('click', () => loadData().catch((error) => setMessage(error.message, 'error')));
 document.getElementById('classNotices').addEventListener('click', () => openPrintable('/api/admin/class-notices', '無法產生班級通知單。'));
+document.getElementById('batchNotices').addEventListener('click', printSelectedNotices);
+document.getElementById('selectAllNotices').addEventListener('click', () => {
+  if (registrations.length > 0 && selectedNoticeNos.size === registrations.length) selectedNoticeNos.clear();
+  else registrations.forEach((registration) => selectedNoticeNos.add(registration.registrationNo));
+  document.querySelectorAll('[data-select-notice]').forEach((checkbox) => { checkbox.checked = selectedNoticeNos.has(checkbox.value); });
+  updateNoticeSelectionControls();
+});
 document.getElementById('logout').addEventListener('click', () => { sessionStorage.removeItem('clubAdminSession'); location.reload(); });
 document.getElementById('exportCsv').addEventListener('click', () => {
   const header = ['報名編號', '學生姓名', '年級', '班級', '身分證遮罩', '家長電話', '家長信箱', '社團', '結果', '候補序號', '報名時間'];
