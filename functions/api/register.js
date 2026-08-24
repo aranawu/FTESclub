@@ -10,6 +10,7 @@ export async function onRequestPost({ request, env }) {
     const payload = await readJson(request);
     const studentName = String(payload.studentName || '').trim();
     const grade = String(payload.grade || '').trim();
+    const className = String(payload.className || '').trim();
     const studentId = String(payload.studentId || '').trim();
     const guardianPhone = String(payload.guardianPhone || '').trim();
     const guardianEmail = String(payload.guardianEmail || '').trim().toLowerCase();
@@ -17,6 +18,7 @@ export async function onRequestPost({ request, env }) {
 
     if (!studentName || studentName.length > 40) return json({ error: '請填寫正確的學生姓名。' }, 400);
     if (!['1年級', '2年級', '3年級', '4年級', '5年級', '6年級'].includes(grade)) return json({ error: '請選擇正確年級。' }, 400);
+    if (!className || className.length > 20) return json({ error: '請填寫正確的班級。' }, 400);
     if (!isValidTaiwanId(studentId)) return json({ error: '身分證字號格式或檢核碼不正確。' }, 400);
     if (!validPhone(guardianPhone)) return json({ error: '家長聯絡電話格式不正確。' }, 400);
     if (!validEmail(guardianEmail)) return json({ error: '家長電子郵件格式不正確。' }, 400);
@@ -32,9 +34,9 @@ export async function onRequestPost({ request, env }) {
     const submittedAt = new Date().toISOString();
     const statements = [
       env.DB.prepare(`INSERT INTO registrations
-        (id, registration_no, student_name, grade, student_id_hash, student_id_masked, guardian_phone, guardian_email, submitted_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-        .bind(id, registrationNo, studentName, grade, studentIdHash, maskTaiwanId(studentId), guardianPhone, guardianEmail, submittedAt),
+        (id, registration_no, student_name, grade, class_name, student_id_hash, student_id_masked, guardian_phone, guardian_email, submitted_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+        .bind(id, registrationNo, studentName, grade, className, studentIdHash, maskTaiwanId(studentId), guardianPhone, guardianEmail, submittedAt),
       ...selection.selected.map((club) => env.DB.prepare(`INSERT INTO registration_choices
         (registration_id, club_id, status) VALUES (?, ?, 'pending')`).bind(id, club.id)),
     ];

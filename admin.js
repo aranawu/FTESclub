@@ -70,7 +70,7 @@ function applicantHtml(registration, choice) {
   const selected = (value) => choice.status === value ? 'selected' : '';
   const waitlistHidden = choice.status === 'waitlist' ? '' : 'hidden';
   return `<div class="applicant-row" data-row="${escapeHtml(registration.registrationNo)}-${escapeHtml(choice.clubId)}">
-    <div class="applicant-main"><strong>${escapeHtml(registration.studentName)}</strong><span>${escapeHtml(registration.grade)} · ${escapeHtml(registration.studentIdMasked)} · ${escapeHtml(registration.guardianPhone)}</span><small>${escapeHtml(registration.guardianEmail)} · 報名編號 ${escapeHtml(registration.registrationNo)}</small></div>
+    <div class="applicant-main"><strong>${escapeHtml(registration.studentName)}</strong><span>${escapeHtml(registration.grade)} ${escapeHtml(registration.className)} · ${escapeHtml(registration.studentIdMasked)} · ${escapeHtml(registration.guardianPhone)}</span><small>${escapeHtml(registration.guardianEmail)} · 報名編號 ${escapeHtml(registration.registrationNo)}</small></div>
     <div class="applicant-actions">
       <select data-status aria-label="${escapeHtml(registration.studentName)}審核結果"><option value="pending" ${selected('pending')}>待審核</option><option value="accepted" ${selected('accepted')}>錄取</option><option value="waitlist" ${selected('waitlist')}>候補</option><option value="rejected" ${selected('rejected')}>未錄取</option></select>
       <input class="candidate-input ${waitlistHidden}" data-waitlist type="number" min="1" value="${escapeHtml(choice.waitlistNo || '')}" placeholder="候補序號" ${choice.status === 'waitlist' ? '' : 'disabled'}>
@@ -103,9 +103,13 @@ async function saveDecision(button) {
 }
 
 async function printNotice(registrationNo) {
+  return openPrintable(`/api/admin/notice?registrationNo=${encodeURIComponent(registrationNo)}`, '無法產生個別通知單。');
+}
+
+async function openPrintable(path, fallbackMessage) {
   try {
-    const response = await fetch(`/api/admin/notice?registrationNo=${encodeURIComponent(registrationNo)}`, { headers: { authorization: `Bearer ${adminSession}` } });
-    if (!response.ok) { const data = await response.json(); throw new Error(data.error || '無法產生通知單。'); }
+    const response = await fetch(path, { headers: { authorization: `Bearer ${adminSession}` } });
+    if (!response.ok) { const data = await response.json(); throw new Error(data.error || fallbackMessage); }
     const html = await response.text();
     const url = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
     window.open(url, '_blank', 'noopener');
@@ -141,10 +145,11 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
 });
 
 document.getElementById('refreshData').addEventListener('click', () => loadData().catch((error) => setMessage(error.message, 'error')));
+document.getElementById('classNotices').addEventListener('click', () => openPrintable('/api/admin/class-notices', '無法產生班級通知單。'));
 document.getElementById('logout').addEventListener('click', () => { sessionStorage.removeItem('clubAdminSession'); location.reload(); });
 document.getElementById('exportCsv').addEventListener('click', () => {
-  const header = ['報名編號', '學生姓名', '年級', '身分證遮罩', '家長電話', '家長信箱', '社團', '結果', '候補序號', '報名時間'];
-  const rows = registrations.flatMap((registration) => registration.choices.map((choice) => [registration.registrationNo, registration.studentName, registration.grade, registration.studentIdMasked, registration.guardianPhone, registration.guardianEmail, choice.club.name, statusText(choice.status, choice.waitlistNo), choice.waitlistNo || '', registration.submittedAt]));
+  const header = ['報名編號', '學生姓名', '年級', '班級', '身分證遮罩', '家長電話', '家長信箱', '社團', '結果', '候補序號', '報名時間'];
+  const rows = registrations.flatMap((registration) => registration.choices.map((choice) => [registration.registrationNo, registration.studentName, registration.grade, registration.className, registration.studentIdMasked, registration.guardianPhone, registration.guardianEmail, choice.club.name, statusText(choice.status, choice.waitlistNo), choice.waitlistNo || '', registration.submittedAt]));
   const csv = [header, ...rows].map((row) => row.map((value) => `"${String(value ?? '').replace(/"/g, '""')}"`).join(',')).join('\r\n');
   const url = URL.createObjectURL(new Blob([`\ufeff${csv}`], { type: 'text/csv;charset=utf-8' }));
   const link = document.createElement('a'); link.href = url; link.download = '社團報名清單.csv'; link.click(); URL.revokeObjectURL(url);

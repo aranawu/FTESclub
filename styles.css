@@ -83,3 +83,105 @@ code { background:#eef2f6; border-radius:5px; padding:2px 5px; }
 .notice-actions { display:flex; gap:10px; margin-top:26px; }
 @media (max-width:720px) { .intro-card,.choice-grid,.field-grid,.auth-form { grid-template-columns:1fr; } .field-span { grid-column:auto; } .rule-grid { grid-template-columns:repeat(3,1fr); } .card { padding:20px; border-radius:18px; } .toolbar,.group-heading,.applicant-row { align-items:stretch; flex-direction:column; } .applicant-actions { justify-content:flex-start; } .site-footer { flex-direction:column; } }
 @media print { body { background:white; } body > *:not(main) { display:none; } .page-shell > *:not(#noticePreview) { display:none !important; } #noticePreview { display:block !important; box-shadow:none; border:0; margin:0; padding:0; } .notice-actions { display:none; } }
+
+/* 豐田國小：可愛卡通田園主題 */
+:root {
+  --ink:#344231;
+  --muted:#69755e;
+  --blue:#4d873c;
+  --blue-dark:#315d2d;
+  --sky:#e8f5d8;
+  --mint:#edf8df;
+  --line:#d8e5b9;
+  --warning:#fff5c9;
+  --warning-ink:#755800;
+  --danger:#b64c49;
+  --paper:#f7f4df;
+  --sun:#ffd94f;
+  --orange:#f59d39;
+  --shadow:0 16px 38px rgba(63,91,38,.13);
+}
+body {
+  background-color:var(--paper);
+  background-image:radial-gradient(circle at 18px 18px,rgba(123,159,72,.08) 2px,transparent 2px);
+  background-size:36px 36px;
+}
+.hero {
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  min-height:285px;
+  display:grid;
+  align-items:center;
+  padding:42px 20px 70px;
+  color:#294328;
+  background:linear-gradient(#bfe7f5 0%,#e6f7ef 72%,#d8eaa5 72%);
+}
+.compact-hero { min-height:220px; padding:30px 20px 55px; }
+.hero-inner { position:relative; z-index:3; display:flex; align-items:center; gap:28px; }
+.school-logo { width:144px; height:144px; flex:none; object-fit:contain; background:#fff; border:5px solid #fff; border-radius:50%; box-shadow:0 9px 0 rgba(79,128,54,.16),0 15px 30px rgba(49,93,45,.18); transform:rotate(-2deg); }
+.admin-logo { width:112px; height:112px; }
+.hero-copy { max-width:780px; }
+.hero h1 { color:#315d2d; text-shadow:0 3px 0 rgba(255,255,255,.75); }
+.hero p { color:#3e5c3d; font-weight:600; }
+.hero .eyebrow { color:#285b59; }
+.pastoral-scene,.pastoral-scene span { position:absolute; pointer-events:none; }
+.pastoral-scene { inset:0; z-index:0; overflow:hidden; }
+.sun { width:72px; height:72px; right:8%; top:34px; border-radius:50%; background:var(--sun); box-shadow:0 0 0 12px rgba(255,217,79,.18); }
+.cloud { width:82px; height:24px; border-radius:99px; background:rgba(255,255,255,.82); top:45px; left:8%; }
+.cloud::before,.cloud::after { content:""; position:absolute; border-radius:50%; background:inherit; }
+.cloud::before { width:36px; height:36px; left:14px; bottom:0; }
+.cloud::after { width:28px; height:28px; right:12px; bottom:0; }
+.cloud-two { width:64px; top:100px; left:auto; right:26%; transform:scale(.75); opacity:.8; }
+.hill { left:-8%; right:-8%; bottom:-70px; height:135px; border-radius:50% 50% 0 0; }
+.hill-back { background:#a9cf69; transform:rotate(1deg); bottom:-45px; }
+.hill-front { background:#76ae50; transform:rotate(-2deg); bottom:-88px; }
+.page-shell { position:relative; z-index:2; margin-top:-26px; }
+.notice { border-radius:18px; box-shadow:0 6px 16px rgba(72,100,46,.08); }
+.info { background:#eff9e5; color:#3f6635; border-color:#c7dda3; }
+.card { border:2px solid rgba(173,197,126,.48); border-radius:26px; box-shadow:var(--shadow); }
+.intro-card { overflow:hidden; position:relative; }
+.intro-card::after { content:"🌱"; position:absolute; right:16px; top:10px; font-size:34px; transform:rotate(12deg); opacity:.8; }
+.rule-grid div { background:linear-gradient(145deg,#f6f9df,#e0f1c3); border:1px solid #cddfa7; border-radius:18px; }
+.rule-day { color:#4d873c; }
+.step { background:linear-gradient(145deg,#76aa45,#4d873c); box-shadow:0 4px 0 #315d2d; }
+input,select { border:2px solid #ccdba9; border-radius:14px; background:#fffef8; }
+input:focus,select:focus { outline:4px solid rgba(255,217,79,.4); border-color:#6d9f43; }
+.choice-group { border:2px dashed #c5d99d; border-radius:20px; background:#fffdf6; }
+.choice-group legend { color:#315d2d; }
+.club-option { border:1px solid transparent; border-radius:16px; transition:transform .15s ease,background .15s ease,border-color .15s ease; }
+.club-option:hover { background:#edf7dc; border-color:#d1e1ac; transform:translateY(-1px); }
+.club-option:has(input:checked) { background:#fff5c9; border-color:#e8bf44; box-shadow:0 5px 12px rgba(156,120,28,.12); }
+.club-option input,.checkbox-label input { accent-color:#5f943e; }
+button { border-radius:999px; transition:transform .15s ease,box-shadow .15s ease; }
+button:not(:disabled):hover { transform:translateY(-1px); box-shadow:0 5px 12px rgba(48,85,43,.18); }
+.primary-button { background:linear-gradient(145deg,#69a447,#417b38); color:white; }
+.primary-button:hover { background:linear-gradient(145deg,#5c963e,#315d2d); }
+.secondary-button { background:#edf4d7; color:#315d2d; border:1px solid #ccdda6; }
+.success-card { background:linear-gradient(135deg,#eef8df,#fff8cc); }
+.site-footer { color:#657156; }
+.site-footer a,.link-button { color:#39723a; }
+.auth-card { border-top:7px solid #78a63a; }
+.group-heading { border-color:#dfe8c8; }
+.admin-group { border-left:7px solid #84b64f; }
+.applicant-row { border-color:#edf1df; }
+.capacity-unlimited { color:#39713c; background:#eef6df; border-radius:999px; padding:6px 12px; }
+
+@media (max-width:720px) {
+  .hero { min-height:340px; padding:30px 18px 80px; }
+  .compact-hero { min-height:295px; }
+  .hero-inner { flex-direction:column; gap:14px; text-align:center; }
+  .school-logo { width:106px; height:106px; }
+  .admin-logo { width:92px; height:92px; }
+  .hero h1 { font-size:2rem; }
+  .sun { right:4%; top:18px; width:54px; height:54px; }
+  .cloud { left:3%; top:60px; transform:scale(.75); }
+  .cloud-two { display:none; }
+  .page-shell { margin-top:-38px; }
+  .rule-grid { grid-template-columns:1fr; }
+  .toolbar-actions > button { flex:1 1 auto; }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  * { scroll-behavior:auto !important; transition:none !important; }
+}

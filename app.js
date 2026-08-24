@@ -70,12 +70,13 @@ form.addEventListener('submit', async (event) => {
   showMessage('');
   const studentName = document.getElementById('studentName').value.trim();
   const grade = document.getElementById('grade').value;
+  const className = document.getElementById('className').value.trim();
   const studentId = document.getElementById('studentId').value.trim().toUpperCase();
   const guardianPhone = document.getElementById('guardianPhone').value.trim();
   const guardianEmail = document.getElementById('guardianEmail').value.trim().toLowerCase();
   const selected = [...document.querySelectorAll('input[name^="club-"]:checked')].map((input) => input.value).filter(Boolean);
 
-  if (!studentName || !grade || !guardianPhone || !guardianEmail || !document.getElementById('consent').checked) return showMessage('請完整填寫資料並勾選同意事項。', 'error');
+  if (!studentName || !grade || !className || !guardianPhone || !guardianEmail || !document.getElementById('consent').checked) return showMessage('請完整填寫資料並勾選同意事項。', 'error');
   if (!isValidTaiwanId(studentId)) return showMessage('身分證字號格式或檢核碼不正確，請再確認。', 'error');
   if (!document.getElementById('guardianEmail').checkValidity()) return showMessage('家長電子郵件格式不正確。', 'error');
   if (selected.length < 1) return showMessage('請至少選擇一個社團。', 'error');
@@ -86,7 +87,7 @@ form.addEventListener('submit', async (event) => {
     const response = await fetch('/api/register', {
       method: 'POST',
       headers: { 'content-type': 'application/json', accept: 'application/json' },
-      body: JSON.stringify({ studentName, grade, studentId, guardianPhone, guardianEmail, clubs: selected }),
+      body: JSON.stringify({ studentName, grade, className, studentId, guardianPhone, guardianEmail, clubs: selected }),
     });
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || '報名失敗，請稍後再試。');

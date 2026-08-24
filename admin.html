@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="hero compact-hero"><div class="hero-inner"><p class="eyebrow">115 學年度 · 承辦人工作區</p><h1>報名管理</h1><p>人工審核、結果寄送、候補管理與個別通知單列印。</p></div></header>
+  <header class="hero compact-hero"><div class="pastoral-scene" aria-hidden="true"><span class="sun"></span><span class="cloud cloud-one"></span><span class="hill hill-back"></span><span class="hill hill-front"></span></div><div class="hero-inner"><img class="school-logo admin-logo" src="assets/ftes-logo.jpg" alt="新竹縣豐田國民小學校徽" width="112" height="113"><div class="hero-copy"><p class="eyebrow">豐田國小 · 115 學年度 · 承辦人工作區</p><h1>社團報名管理</h1><p>人工審核、候補管理、結果寄送，以及個別與班級通知單列印。</p></div></div></header>
   <main class="page-shell">
     <section id="loginPanel" class="card auth-card">
       <p class="eyebrow dark">管理者驗證</p>
@@ -25,12 +25,12 @@
     <div id="adminPanel" class="hidden">
       <section class="toolbar card">
         <div><p class="eyebrow dark">目前資料</p><h2 id="summaryTitle">正在載入…</h2><p id="summaryText" class="helper"></p></div>
-        <div class="toolbar-actions"><button id="refreshData" class="secondary-button">重新整理</button><button id="exportCsv" class="secondary-button">匯出 CSV</button><button id="logout" class="danger-button">登出</button></div>
+        <div class="toolbar-actions"><button id="refreshData" class="secondary-button">重新整理</button><button id="classNotices" class="primary-button">班級通知單</button><button id="exportCsv" class="secondary-button">匯出 CSV</button><button id="logout" class="danger-button">登出</button></div>
       </section>
       <div id="adminMessage" class="form-message" role="status" aria-live="polite"></div>
       <section id="adminGroups" class="admin-groups"></section>
     </div>
-    <footer class="site-footer"><a href="index.html">回到家長報名頁</a><span>請勿共用管理帳號或密碼</span></footer>
+    <footer class="site-footer"><a href="index.html">← 回到家長報名頁</a><span>🌾 請勿共用管理帳號或密碼</span></footer>
   </main>
   <script src="admin.js" defer></script>
 </body>

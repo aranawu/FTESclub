@@ -9,10 +9,10 @@
 </head>
 <body>
   <header class="hero">
+    <div class="pastoral-scene" aria-hidden="true"><span class="sun"></span><span class="cloud cloud-one"></span><span class="cloud cloud-two"></span><span class="hill hill-back"></span><span class="hill hill-front"></span></div>
     <div class="hero-inner">
-      <p class="eyebrow">115 學年度 · 課後社團</p>
-      <h1>線上報名</h1>
-      <p>每位學生星期三、星期五各至多選擇一個社團；超額名額由學校人工審核。</p>
+      <img class="school-logo" src="assets/ftes-logo.jpg" alt="新竹縣豐田國民小學校徽" width="144" height="145">
+      <div class="hero-copy"><p class="eyebrow">新竹縣豐田國民小學 · 115 學年度</p><h1>課後社團線上報名</h1><p>一起在田園裡學習、探索、快樂成長！星期三、星期五可各選一個社團。</p></div>
     </div>
   </header>
 
@@ -38,6 +38,7 @@
         <div class="field-grid">
           <label>學生姓名<input id="studentName" name="studentName" required maxlength="40" autocomplete="name" placeholder="例如：王小明"></label>
           <label>年級<select id="grade" name="grade" required><option value="">請選擇</option><option>1年級</option><option>2年級</option><option>3年級</option><option>4年級</option><option>5年級</option><option>6年級</option></select></label>
+          <label>班級<input id="className" name="className" required maxlength="20" autocomplete="organization-title" placeholder="例如：甲班、1班"><small>用於彙整班級通知單。</small></label>
           <label>學生身分證字號<input id="studentId" name="studentId" required maxlength="10" autocomplete="off" placeholder="A123456789" spellcheck="false"><small>傳送時使用 HTTPS；後端不保存明碼。</small></label>
           <label>家長聯絡電話<input id="guardianPhone" name="guardianPhone" required maxlength="20" autocomplete="tel" placeholder="09xxxxxxxx"></label>
           <label class="field-span">家長電子郵件<input id="guardianEmail" name="guardianEmail" type="email" required maxlength="120" autocomplete="email" placeholder="parent@example.com"><small>報名收件通知與錄取／候補結果將寄到此信箱。</small></label>
@@ -58,7 +59,7 @@
     </form>
 
     <section id="successPanel" class="card success-card hidden" aria-live="polite"></section>
-    <footer class="site-footer"><span>115學年度課後社團報名系統</span><span>個資僅供本次社團業務使用</span></footer>
+    <footer class="site-footer"><span>🌾 豐田國小 115學年度課後社團報名系統</span><span>個資僅供本次社團業務使用</span></footer>
   </main>
   <script src="app.js" defer></script>
 </body>

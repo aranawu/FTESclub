@@ -20,4 +20,6 @@ for (const file of publicFiles) {
   await cp(resolve(root, file), resolve(dist, file));
 }
 
-console.log(`Built ${publicFiles.length} public files in ${dist}`);
+await cp(resolve(root, "assets"), resolve(dist, "assets"), { recursive: true });
+
+console.log(`Built ${publicFiles.length} public files and assets in ${dist}`);

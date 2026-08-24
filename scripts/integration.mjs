@@ -4,6 +4,7 @@ import { onRequestPost as login } from '../functions/api/admin/login.js';
 import { onRequestGet as list } from '../functions/api/admin/registrations.js';
 import { onRequestPost as decide } from '../functions/api/admin/decision.js';
 import { onRequestGet as notice } from '../functions/api/admin/notice.js';
+import { onRequestGet as classNotices } from '../functions/api/admin/class-notices.js';
 
 class Statement {
   constructor(db, sql) { this.db = db; this.sql = sql.replace(/\s+/g, ' ').trim(); this.args = []; }
@@ -48,8 +49,8 @@ class FakeD1 {
   }
   async run(sql, args) {
     if (sql.startsWith('INSERT INTO registrations')) {
-      const [id, registration_no, student_name, grade, student_id_hash, student_id_masked, guardian_phone, guardian_email, submitted_at] = args;
-      this.registrations.push({ id, registration_no, student_name, grade, student_id_hash, student_id_masked, guardian_phone, guardian_email, submitted_at, last_result_email_at: null });
+      const [id, registration_no, student_name, grade, class_name, student_id_hash, student_id_masked, guardian_phone, guardian_email, submitted_at] = args;
+      this.registrations.push({ id, registration_no, student_name, grade, class_name, student_id_hash, student_id_masked, guardian_phone, guardian_email, submitted_at, last_result_email_at: null });
       return { meta: { changes: 1 } };
     }
     if (sql.startsWith('INSERT INTO registration_choices')) {
@@ -83,21 +84,22 @@ const db = new FakeD1();
 const env = { DB: db, ADMIN_USERNAME: 'admin', ADMIN_PASSWORD: 'test-password', ADMIN_SESSION_SECRET: 'test-session-secret-32-characters-long', ID_HASH_PEPPER: 'test-id-pepper-32-characters-long', SCHOOL_NAME: '測試國小' };
 const post = (url, body, headers = {}) => new Request(url, { method: 'POST', headers: { 'content-type': 'application/json', ...headers }, body: JSON.stringify(body) });
 
-const submitted = await register({ request: post('http://local/api/register', { studentName: '測試學生', grade: '2年級', studentId: 'A123456789', guardianPhone: '0912345678', guardianEmail: 'parent@example.com', clubs: ['flute', 'yushan-english'] }), env });
+const submitted = await register({ request: post('http://local/api/register', { studentName: '測試學生', grade: '2年級', className: '甲班', studentId: 'A123456789', guardianPhone: '0912345678', guardianEmail: 'parent@example.com', clubs: ['flute', 'yushan-english'] }), env });
 assert.equal(submitted.status, 201);
 const submission = await submitted.json();
 assert.match(submission.registrationNo, /^115-/);
 assert.equal(submission.emailSent, false);
 assert.equal(db.registrations[0].student_id_masked, 'A******789');
+assert.equal(db.registrations[0].class_name, '甲班');
 assert.ok(!JSON.stringify(db).includes('A123456789'), '身分證明碼不得寫入資料庫');
 
-const duplicate = await register({ request: post('http://local/api/register', { studentName: '測試學生', grade: '2年級', studentId: 'A123456789', guardianPhone: '0912345678', guardianEmail: 'parent@example.com', clubs: ['flute'] }), env });
+const duplicate = await register({ request: post('http://local/api/register', { studentName: '測試學生', grade: '2年級', className: '甲班', studentId: 'A123456789', guardianPhone: '0912345678', guardianEmail: 'parent@example.com', clubs: ['flute'] }), env });
 assert.equal(duplicate.status, 409);
 
-const invalidDays = await register({ request: post('http://local/api/register', { studentName: '另一學生', grade: '2年級', studentId: 'F123456782', guardianPhone: '0912345678', guardianEmail: 'parent@example.com', clubs: ['flute', 'diabolo'] }), env });
+const invalidDays = await register({ request: post('http://local/api/register', { studentName: '另一學生', grade: '2年級', className: '乙班', studentId: 'F123456782', guardianPhone: '0912345678', guardianEmail: 'parent@example.com', clubs: ['flute', 'diabolo'] }), env });
 assert.equal(invalidDays.status, 400);
 
-const invalidDiaboloGrade = await register({ request: post('http://local/api/register', { studentName: '另一學生', grade: '2年級', studentId: 'F123456782', guardianPhone: '0912345678', guardianEmail: 'parent@example.com', clubs: ['diabolo'] }), env });
+const invalidDiaboloGrade = await register({ request: post('http://local/api/register', { studentName: '另一學生', grade: '2年級', className: '乙班', studentId: 'F123456782', guardianPhone: '0912345678', guardianEmail: 'parent@example.com', clubs: ['diabolo'] }), env });
 assert.equal(invalidDiaboloGrade.status, 400);
 
 assert.equal((await login({ request: post('http://local/api/admin/login', { username: 'admin', password: 'wrong' }), env })).status, 401);
@@ -122,5 +124,14 @@ assert.equal(printed.status, 200);
 const printedHtml = await printed.text();
 assert.ok(printedHtml.includes('測試學生'));
 assert.ok(printedHtml.includes('錄取'));
+assert.ok(printedHtml.includes('甲班'));
 
-console.log('Integration test passed: registration, duplicate protection, validation, admin auth, review, and printable notice.');
+const classPrinted = await classNotices({ request: new Request('http://local/api/admin/class-notices', { headers: adminHeaders }), env });
+assert.equal(classPrinted.status, 200);
+const classPrintedHtml = await classPrinted.text();
+assert.ok(classPrintedHtml.includes('課後社團班級通知單'));
+assert.ok(classPrintedHtml.includes('2年級'));
+assert.ok(classPrintedHtml.includes('甲班'));
+assert.ok(classPrintedHtml.includes('測試學生'));
+
+console.log('Integration test passed: registration, duplicate protection, validation, admin auth, review, individual notice, and class notices.');

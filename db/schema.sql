@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS registrations (
   registration_no TEXT NOT NULL UNIQUE,
   student_name TEXT NOT NULL,
   grade TEXT NOT NULL,
+  class_name TEXT NOT NULL,
   student_id_hash TEXT NOT NULL UNIQUE,
   student_id_masked TEXT NOT NULL,
   guardian_phone TEXT NOT NULL,
