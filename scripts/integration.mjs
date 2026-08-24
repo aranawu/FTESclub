@@ -5,6 +5,7 @@ import { onRequestGet as list } from '../functions/api/admin/registrations.js';
 import { onRequestPost as decide } from '../functions/api/admin/decision.js';
 import { onRequestGet as notice } from '../functions/api/admin/notice.js';
 import { onRequestGet as classNotices } from '../functions/api/admin/class-notices.js';
+import { onRequestPost as updateRegistration } from '../functions/api/admin/registration.js';
 
 class Statement {
   constructor(db, sql) { this.db = db; this.sql = sql.replace(/\s+/g, ' ').trim(); this.args = []; }
@@ -76,6 +77,11 @@ class FakeD1 {
       if (choice) choice.result_email_sent_at = args[0];
       return { meta: { changes: choice ? 1 : 0 } };
     }
+    if (sql.startsWith('UPDATE registrations SET class_name')) {
+      const row = this.registrations.find((item) => item.registration_no === args[1]);
+      if (row) row.class_name = args[0];
+      return { meta: { changes: row ? 1 : 0 } };
+    }
     throw new Error(`Unhandled run SQL: ${sql}`);
   }
 }
@@ -113,6 +119,10 @@ const listed = await list({ request: new Request('http://local/api/admin/registr
 assert.equal(listed.status, 200);
 assert.equal((await listed.json()).registrations.length, 1);
 
+const updatedClass = await updateRegistration({ request: post('http://local/api/admin/registration', { registrationNo: submission.registrationNo, className: '彩虹班' }, adminHeaders), env });
+assert.equal(updatedClass.status, 200);
+assert.equal((await updatedClass.json()).registration.className, '彩虹班');
+
 const decided = await decide({ request: post('http://local/api/admin/decision', { registrationNo: submission.registrationNo, clubId: 'flute', status: 'accepted' }, adminHeaders), env });
 assert.equal(decided.status, 200);
 const decision = await decided.json();
@@ -124,14 +134,14 @@ assert.equal(printed.status, 200);
 const printedHtml = await printed.text();
 assert.ok(printedHtml.includes('測試學生'));
 assert.ok(printedHtml.includes('錄取'));
-assert.ok(printedHtml.includes('甲班'));
+assert.ok(printedHtml.includes('彩虹班'));
 
 const classPrinted = await classNotices({ request: new Request('http://local/api/admin/class-notices', { headers: adminHeaders }), env });
 assert.equal(classPrinted.status, 200);
 const classPrintedHtml = await classPrinted.text();
 assert.ok(classPrintedHtml.includes('課後社團班級通知單'));
 assert.ok(classPrintedHtml.includes('2年級'));
-assert.ok(classPrintedHtml.includes('甲班'));
+assert.ok(classPrintedHtml.includes('彩虹班'));
 assert.ok(classPrintedHtml.includes('測試學生'));
 
 console.log('Integration test passed: registration, duplicate protection, validation, admin auth, review, individual notice, and class notices.');
