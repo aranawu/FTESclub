@@ -8,7 +8,8 @@ export async function onRequestGet({ request, env }) {
   try {
     if (!env.DB) return json({ error: '資料庫尚未設定。' }, 503);
     const registrations = await listRegistrations(env.DB);
-    return new Response(printableClassNotices(registrations, env.SCHOOL_NAME || '學校'), {
+    const stylesheetUrl = new URL('/print.css', request.url).href;
+    return new Response(printableClassNotices(registrations, env.SCHOOL_NAME || '學校', stylesheetUrl), {
       headers: {
         'content-type': 'text/html; charset=utf-8',
         'cache-control': 'no-store',

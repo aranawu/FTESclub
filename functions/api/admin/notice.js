@@ -9,7 +9,8 @@ export async function onRequestGet({ request, env }) {
   const registrationNo = new URL(request.url).searchParams.get('registrationNo') || '';
   const registration = await getRegistration(env.DB, registrationNo);
   if (!registration) return json({ error: '找不到此學生的報名資料。' }, 404);
-  return new Response(printableNotice(registration, env.SCHOOL_NAME || '學校'), {
+  const stylesheetUrl = new URL('/print.css', request.url).href;
+  return new Response(printableNotice(registration, env.SCHOOL_NAME || '學校', stylesheetUrl), {
     headers: {
       'content-type': 'text/html; charset=utf-8',
       'cache-control': 'no-store',

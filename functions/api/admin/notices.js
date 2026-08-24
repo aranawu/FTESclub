@@ -17,7 +17,8 @@ export async function onRequestPost({ request, env }) {
     const selected = registrationNos.map((registrationNo) => byNumber.get(registrationNo)).filter(Boolean);
     if (selected.length !== registrationNos.length) return json({ error: '部分學生報名資料不存在，請重新整理後再選取。' }, 404);
 
-    return new Response(printableNotices(selected, env.SCHOOL_NAME || '學校'), {
+    const stylesheetUrl = new URL('/print.css', request.url).href;
+    return new Response(printableNotices(selected, env.SCHOOL_NAME || '學校', stylesheetUrl), {
       headers: {
         'content-type': 'text/html; charset=utf-8',
         'cache-control': 'no-store',

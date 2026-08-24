@@ -141,6 +141,8 @@ assert.ok(printedHtml.includes('測試學生'));
 assert.ok(printedHtml.includes('錄取'));
 assert.ok(printedHtml.includes('彩虹班'));
 assert.ok(!printedHtml.includes('<img'));
+assert.ok(printedHtml.includes('http://local/print.css'));
+assert.ok(printedHtml.includes('class="personal-notice-page"'));
 
 const classPrinted = await classNotices({ request: new Request('http://local/api/admin/class-notices', { headers: adminHeaders }), env });
 assert.equal(classPrinted.status, 200);
@@ -150,6 +152,8 @@ assert.ok(classPrintedHtml.includes('2年級'));
 assert.ok(classPrintedHtml.includes('彩虹班'));
 assert.ok(classPrintedHtml.includes('測試學生'));
 assert.ok(!classPrintedHtml.includes('<img'));
+assert.ok(classPrintedHtml.includes('http://local/print.css'));
+assert.ok(classPrintedHtml.includes('class="class-notice-page"'));
 assert.ok(classPrintedHtml.includes('已錄取名單'));
 assert.ok(classPrintedHtml.includes('候補／審核中'));
 assert.ok(classPrintedHtml.includes('未錄取名單'));

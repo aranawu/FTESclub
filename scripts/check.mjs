@@ -27,6 +27,7 @@ const projectFiles = [
   "app.js",
   "admin.js",
   "styles.css",
+  "print.css",
   "db/schema.sql",
   "wrangler.jsonc",
 ];

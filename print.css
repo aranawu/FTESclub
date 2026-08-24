@@ -1,0 +1,274 @@
+:root {
+  --field-ink: #344231;
+  --field-green: #4d873c;
+  --field-green-dark: #315d2d;
+  --field-line: #cddcae;
+  --field-paper: #fffef8;
+  --field-cream: #f7f4df;
+  --field-yellow: #ffd94f;
+  --field-shadow: 0 18px 44px rgba(63, 91, 38, 0.16);
+}
+
+body.class-notice-page,
+body.personal-notice-page {
+  color: var(--field-ink);
+  background-color: var(--field-cream);
+  background-image: radial-gradient(circle at 18px 18px, rgba(123, 159, 72, 0.08) 2px, transparent 2px);
+  background-size: 36px 36px;
+}
+
+.class-notice-page .tools,
+.personal-notice-page .actions {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  min-height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 11px 18px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--field-green-dark), #4f833c);
+  border-bottom: 5px solid var(--field-yellow);
+  box-shadow: 0 5px 18px rgba(49, 93, 45, 0.24);
+}
+
+.class-notice-page .tools::before,
+.personal-notice-page .actions::before {
+  content: "🌾 豐田國小社團通知單";
+  margin-right: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.class-notice-page .tools label {
+  font-weight: 800;
+}
+
+.class-notice-page .tools select,
+.class-notice-page .tools button,
+.personal-notice-page .actions button {
+  min-height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.52);
+  border-radius: 999px;
+  padding: 8px 16px;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.class-notice-page .tools select {
+  color: var(--field-green-dark);
+  background: #fff;
+}
+
+.class-notice-page .tools button,
+.personal-notice-page .actions button {
+  color: #4d481e;
+  background: linear-gradient(145deg, #ffe779, var(--field-yellow));
+  box-shadow: 0 4px 0 #c5a424;
+}
+
+.class-notice-page .sheet,
+.personal-notice-page .sheet {
+  background: var(--field-paper);
+  border: 2px solid var(--field-line);
+  border-radius: 26px;
+  box-shadow: var(--field-shadow);
+}
+
+.class-notice-page .sheet {
+  width: min(195mm, calc(100% - 32px));
+  margin: 28px auto;
+  padding: 12mm;
+}
+
+.class-notice-page .sheet > header {
+  min-height: 68px;
+  padding: 5px 0 12px;
+  border-bottom: 4px solid #77a949;
+}
+
+.class-notice-page .sheet > header p,
+.personal-notice-page .head p {
+  color: #6d795d;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.class-notice-page .sheet > header h1,
+.personal-notice-page .head h1 {
+  color: var(--field-green-dark);
+  font-family: "Microsoft JhengHei", sans-serif;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+}
+
+.class-notice-page .intro {
+  margin: 10px 0 12px;
+  color: #647056;
+}
+
+.class-notice-page .summary {
+  gap: 10px;
+}
+
+.class-notice-page .summary div {
+  border: 1px solid var(--field-line);
+  border-radius: 14px;
+  padding: 8px;
+}
+
+.class-notice-page .summary .accepted {
+  color: #27633b;
+  background: #e9f6e7;
+}
+
+.class-notice-page .summary .attention {
+  color: #755a00;
+  background: #fff5c9;
+}
+
+.class-notice-page .summary .rejected {
+  color: #873b3b;
+  background: #fdeaea;
+}
+
+.class-notice-page .student-overview-section,
+.class-notice-page .result-section {
+  overflow: hidden;
+  border: 1px solid var(--field-line);
+  border-radius: 15px;
+  background: #fff;
+}
+
+.class-notice-page .section-title,
+.class-notice-page .student-overview-section .section-title {
+  padding: 8px 12px;
+  border-bottom: 2px solid #98b26d;
+  background: #eef5df;
+}
+
+.class-notice-page .section-title h2 {
+  color: var(--field-green-dark);
+}
+
+.class-notice-page table {
+  color: #30392e;
+  background: #fff;
+}
+
+.class-notice-page th {
+  color: #315d2d;
+  background: #edf4df;
+}
+
+.class-notice-page th,
+.class-notice-page td {
+  border-color: #9eae87;
+}
+
+.class-notice-page .accepted .section-title {
+  background: #e6f4e5;
+}
+
+.class-notice-page .attention .section-title {
+  background: #fff3c5;
+}
+
+.class-notice-page .rejected .section-title {
+  background: #fae6e6;
+}
+
+.class-notice-page footer {
+  padding-top: 8px;
+  border-top: 1px dashed #b9c7a1;
+}
+
+.personal-notice-page .sheet {
+  max-width: 790px;
+  min-height: 255mm;
+  margin: 28px auto;
+  padding: 44px;
+}
+
+.personal-notice-page .head {
+  padding: 4px 0 18px;
+  border-bottom: 4px solid #77a949;
+}
+
+.personal-notice-page .meta div {
+  border: 1px solid #d5e2b8;
+  border-radius: 14px;
+  background: #f2f7e6;
+}
+
+.personal-notice-page table {
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.personal-notice-page th {
+  color: #315d2d;
+  background: #eaf3d8;
+}
+
+.personal-notice-page th,
+.personal-notice-page td {
+  border-color: #aab990;
+}
+
+.personal-notice-page .result {
+  color: #39713c;
+}
+
+@media (max-width: 720px) {
+  .class-notice-page .tools,
+  .personal-notice-page .actions {
+    flex-wrap: wrap;
+  }
+
+  .class-notice-page .tools::before,
+  .personal-notice-page .actions::before {
+    width: 100%;
+    margin: 0;
+    text-align: center;
+  }
+
+  .class-notice-page .sheet,
+  .personal-notice-page .sheet {
+    width: calc(100% - 16px);
+    margin: 12px auto;
+    padding: 18px;
+    border-radius: 20px;
+  }
+}
+
+@media print {
+  body.class-notice-page,
+  body.personal-notice-page {
+    background: #fff;
+  }
+
+  .class-notice-page .tools,
+  .personal-notice-page .actions {
+    display: none;
+  }
+
+  .class-notice-page .sheet,
+  .personal-notice-page .sheet {
+    width: auto;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .class-notice-page .student-overview-section,
+  .class-notice-page .result-section {
+    border-radius: 0;
+  }
+}

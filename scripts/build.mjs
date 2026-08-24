@@ -10,6 +10,7 @@ const publicFiles = [
   "app.js",
   "admin.js",
   "styles.css",
+  "print.css",
   "_headers",
 ];
 
