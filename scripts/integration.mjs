@@ -139,6 +139,7 @@ const printedHtml = await printed.text();
 assert.ok(printedHtml.includes('測試學生'));
 assert.ok(printedHtml.includes('錄取'));
 assert.ok(printedHtml.includes('彩虹班'));
+assert.ok(!printedHtml.includes('<img'));
 
 const classPrinted = await classNotices({ request: new Request('http://local/api/admin/class-notices', { headers: adminHeaders }), env });
 assert.equal(classPrinted.status, 200);
@@ -147,6 +148,7 @@ assert.ok(classPrintedHtml.includes('課後社團班級通知單'));
 assert.ok(classPrintedHtml.includes('2年級'));
 assert.ok(classPrintedHtml.includes('彩虹班'));
 assert.ok(classPrintedHtml.includes('測試學生'));
+assert.ok(!classPrintedHtml.includes('<img'));
 assert.ok(classPrintedHtml.includes('已錄取名單'));
 assert.ok(classPrintedHtml.includes('候補／審核中'));
 assert.ok(classPrintedHtml.includes('未錄取名單'));

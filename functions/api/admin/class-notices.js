@@ -8,8 +8,7 @@ export async function onRequestGet({ request, env }) {
   try {
     if (!env.DB) return json({ error: '資料庫尚未設定。' }, 503);
     const registrations = await listRegistrations(env.DB);
-    const logoUrl = new URL('/assets/ftes-logo.jpg', request.url).href;
-    return new Response(printableClassNotices(registrations, env.SCHOOL_NAME || '學校', logoUrl), {
+    return new Response(printableClassNotices(registrations, env.SCHOOL_NAME || '學校'), {
       headers: {
         'content-type': 'text/html; charset=utf-8',
         'cache-control': 'no-store',
