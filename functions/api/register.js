@@ -1,4 +1,4 @@
-import { validateClubSelection } from '../../lib/clubs.js';
+import { classForGrade, validateClubSelection } from '../../lib/clubs.js';
 import { getRegistration } from '../../lib/data.js';
 import { receiptEmail, sendMail } from '../../lib/email.js';
 import { handleApiError, json, readJson } from '../../lib/http.js';
@@ -10,7 +10,6 @@ export async function onRequestPost({ request, env }) {
     const payload = await readJson(request);
     const studentName = String(payload.studentName || '').trim();
     const grade = String(payload.grade || '').trim();
-    const className = String(payload.className || '').trim();
     const studentId = String(payload.studentId || '').trim();
     const guardianPhone = String(payload.guardianPhone || '').trim();
     const guardianEmail = String(payload.guardianEmail || '').trim().toLowerCase();
@@ -18,7 +17,7 @@ export async function onRequestPost({ request, env }) {
 
     if (!studentName || studentName.length > 40) return json({ error: '請填寫正確的學生姓名。' }, 400);
     if (!['1年級', '2年級', '3年級', '4年級', '5年級', '6年級'].includes(grade)) return json({ error: '請選擇正確年級。' }, 400);
-    if (!className || className.length > 20) return json({ error: '請填寫正確的班級。' }, 400);
+    const className = classForGrade(grade);
     if (!isValidTaiwanId(studentId)) return json({ error: '身分證字號格式或檢核碼不正確。' }, 400);
     if (!validPhone(guardianPhone)) return json({ error: '家長聯絡電話格式不正確。' }, 400);
     if (!validEmail(guardianEmail)) return json({ error: '家長電子郵件格式不正確。' }, 400);

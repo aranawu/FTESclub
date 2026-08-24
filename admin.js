@@ -67,7 +67,6 @@ function renderAdmin() {
   }));
   document.querySelectorAll('[data-save]').forEach((button) => button.addEventListener('click', () => saveDecision(button)));
   document.querySelectorAll('[data-print]').forEach((button) => button.addEventListener('click', () => printNotice(button.dataset.print)));
-  document.querySelectorAll('[data-edit-class]').forEach((button) => button.addEventListener('click', () => editClass(button)));
   document.querySelectorAll('[data-select-notice]').forEach((checkbox) => checkbox.addEventListener('change', () => setNoticeSelection(checkbox.value, checkbox.checked)));
   updateNoticeSelectionControls();
 }
@@ -77,7 +76,7 @@ function applicantHtml(registration, choice) {
   const waitlistHidden = choice.status === 'waitlist' ? '' : 'hidden';
   const noticeChecked = selectedNoticeNos.has(registration.registrationNo) ? 'checked' : '';
   return `<div class="applicant-row" data-row="${escapeHtml(registration.registrationNo)}-${escapeHtml(choice.clubId)}">
-    <div class="applicant-main"><label class="notice-select"><input data-select-notice type="checkbox" value="${escapeHtml(registration.registrationNo)}" ${noticeChecked}>選取個人通知單</label><strong>${escapeHtml(registration.studentName)}</strong><span>${escapeHtml(registration.grade)} <button class="inline-edit-button" data-edit-class data-registration="${escapeHtml(registration.registrationNo)}" data-class-name="${escapeHtml(registration.className || '')}" type="button">${escapeHtml(registration.className || '班級未設定')} ✎</button> · ${escapeHtml(registration.studentIdMasked)} · ${escapeHtml(registration.guardianPhone)}</span><small>${escapeHtml(registration.guardianEmail)} · 報名編號 ${escapeHtml(registration.registrationNo)}</small></div>
+    <div class="applicant-main"><label class="notice-select"><input data-select-notice type="checkbox" value="${escapeHtml(registration.registrationNo)}" ${noticeChecked}>選取個人通知單</label><strong>${escapeHtml(registration.studentName)}</strong><span>${escapeHtml(registration.className || '班級未設定')} · ${escapeHtml(registration.studentIdMasked)} · ${escapeHtml(registration.guardianPhone)}</span><small>${escapeHtml(registration.guardianEmail)} · 報名編號 ${escapeHtml(registration.registrationNo)}</small></div>
     <div class="applicant-actions">
       <select data-status aria-label="${escapeHtml(registration.studentName)}審核結果"><option value="pending" ${selected('pending')}>待審核</option><option value="accepted" ${selected('accepted')}>錄取</option><option value="waitlist" ${selected('waitlist')}>候補</option><option value="rejected" ${selected('rejected')}>未錄取</option></select>
       <input class="candidate-input ${waitlistHidden}" data-waitlist type="number" min="1" value="${escapeHtml(choice.waitlistNo || '')}" placeholder="候補序號" ${choice.status === 'waitlist' ? '' : 'disabled'}>
@@ -103,26 +102,6 @@ function updateNoticeSelectionControls() {
   batchButton.disabled = count === 0;
   batchButton.textContent = `列印個人通知單（${count}）`;
   document.getElementById('selectAllNotices').textContent = registrations.length > 0 && count === registrations.length ? '清除全選' : '全選學生';
-}
-
-async function editClass(button) {
-  const className = window.prompt('請輸入學生班級（例如：甲班、1班）', button.dataset.className || '');
-  if (className === null) return;
-  const value = className.trim();
-  if (!value || value.length > 20) return setMessage('班級不可空白，且最多 20 個字。', 'error');
-  button.disabled = true;
-  try {
-    await api('/api/admin/registration', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ registrationNo: button.dataset.registration, className: value }),
-    });
-    setMessage('班級已更新，班級通知單會自動重新歸班。', 'success');
-    await loadData();
-  } catch (error) {
-    setMessage(error.message, 'error');
-    button.disabled = false;
-  }
 }
 
 async function saveDecision(button) {

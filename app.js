@@ -5,6 +5,7 @@ const successPanel = document.getElementById('successPanel');
 const submitButton = document.getElementById('submitButton');
 const systemNotice = document.getElementById('systemNotice');
 let clubs = [];
+let classByGrade = { '1年級': '一年忠班', '2年級': '二年忠班', '3年級': '三年忠班', '4年級': '四年忠班', '5年級': '五年忠班', '6年級': '六年忠班' };
 
 function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[char]);
@@ -56,6 +57,8 @@ async function loadClubs() {
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || '無法載入社團資料。');
     clubs = data.clubs;
+    classByGrade = { ...classByGrade, ...(data.classByGrade || {}) };
+    syncGradeAndClass();
     renderChoices();
     submitButton.disabled = false;
   } catch (error) {
@@ -63,7 +66,15 @@ async function loadClubs() {
   }
 }
 
-document.getElementById('grade').addEventListener('change', renderChoices);
+function syncGradeAndClass() {
+  const grade = document.getElementById('grade').value;
+  document.getElementById('className').value = classByGrade[grade] || '';
+}
+
+document.getElementById('grade').addEventListener('change', () => {
+  syncGradeAndClass();
+  renderChoices();
+});
 
 form.addEventListener('submit', async (event) => {
   event.preventDefault();

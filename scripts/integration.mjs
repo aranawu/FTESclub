@@ -5,9 +5,8 @@ import { onRequestGet as list } from '../functions/api/admin/registrations.js';
 import { onRequestPost as decide } from '../functions/api/admin/decision.js';
 import { onRequestGet as notice } from '../functions/api/admin/notice.js';
 import { onRequestGet as classNotices } from '../functions/api/admin/class-notices.js';
-import { onRequestPost as updateRegistration } from '../functions/api/admin/registration.js';
 import { onRequestPost as batchNotices } from '../functions/api/admin/notices.js';
-import { CLUB_MAP } from '../lib/clubs.js';
+import { CLASS_BY_GRADE, CLUB_MAP } from '../lib/clubs.js';
 
 class Statement {
   constructor(db, sql) { this.db = db; this.sql = sql.replace(/\s+/g, ' ').trim(); this.args = []; }
@@ -79,11 +78,6 @@ class FakeD1 {
       if (choice) choice.result_email_sent_at = args[0];
       return { meta: { changes: choice ? 1 : 0 } };
     }
-    if (sql.startsWith('UPDATE registrations SET class_name')) {
-      const row = this.registrations.find((item) => item.registration_no === args[1]);
-      if (row) row.class_name = args[0];
-      return { meta: { changes: row ? 1 : 0 } };
-    }
     throw new Error(`Unhandled run SQL: ${sql}`);
   }
 }
@@ -98,7 +92,11 @@ const submission = await submitted.json();
 assert.match(submission.registrationNo, /^115-/);
 assert.equal(submission.emailSent, false);
 assert.equal(db.registrations[0].student_id_masked, 'A******789');
-assert.equal(db.registrations[0].class_name, '甲班');
+assert.equal(db.registrations[0].class_name, '二年忠班');
+assert.deepEqual(CLASS_BY_GRADE, {
+  '1年級': '一年忠班', '2年級': '二年忠班', '3年級': '三年忠班',
+  '4年級': '四年忠班', '5年級': '五年忠班', '6年級': '六年忠班',
+});
 assert.ok(!JSON.stringify(db).includes('A123456789'), '身分證明碼不得寫入資料庫');
 
 const duplicate = await register({ request: post('http://local/api/register', { studentName: '測試學生', grade: '2年級', className: '甲班', studentId: 'A123456789', guardianPhone: '0912345678', guardianEmail: 'parent@example.com', clubs: ['flute'] }), env });
@@ -121,10 +119,6 @@ const listed = await list({ request: new Request('http://local/api/admin/registr
 assert.equal(listed.status, 200);
 assert.equal((await listed.json()).registrations.length, 1);
 
-const updatedClass = await updateRegistration({ request: post('http://local/api/admin/registration', { registrationNo: submission.registrationNo, className: '彩虹班' }, adminHeaders), env });
-assert.equal(updatedClass.status, 200);
-assert.equal((await updatedClass.json()).registration.className, '彩虹班');
-
 const decided = await decide({ request: post('http://local/api/admin/decision', { registrationNo: submission.registrationNo, clubId: 'flute', status: 'accepted' }, adminHeaders), env });
 assert.equal(decided.status, 200);
 const decision = await decided.json();
@@ -139,7 +133,7 @@ assert.equal(printed.status, 200);
 const printedHtml = await printed.text();
 assert.ok(printedHtml.includes('測試學生'));
 assert.ok(printedHtml.includes('錄取'));
-assert.ok(printedHtml.includes('彩虹班'));
+assert.ok(printedHtml.includes('二年忠班'));
 assert.ok(!printedHtml.includes('<img'));
 assert.ok(printedHtml.includes('http://local/print.css'));
 assert.ok(printedHtml.includes('class="personal-notice-page"'));
@@ -148,8 +142,7 @@ const classPrinted = await classNotices({ request: new Request('http://local/api
 assert.equal(classPrinted.status, 200);
 const classPrintedHtml = await classPrinted.text();
 assert.ok(classPrintedHtml.includes('課後社團班級通知單'));
-assert.ok(classPrintedHtml.includes('2年級'));
-assert.ok(classPrintedHtml.includes('彩虹班'));
+assert.ok(classPrintedHtml.includes('二年忠班'));
 assert.ok(classPrintedHtml.includes('測試學生'));
 assert.ok(!classPrintedHtml.includes('<img'));
 assert.ok(classPrintedHtml.includes('http://local/print.css'));
@@ -176,6 +169,7 @@ assert.equal(CLUB_MAP.get('table-tennis').location, '活動中心B1');
 const secondSubmitted = await register({ request: post('http://local/api/register', { studentName: '第二位學生', grade: '3年級', className: '甲班', studentId: 'A223456781', guardianPhone: '0912345678', guardianEmail: 'parent2@example.com', clubs: ['flute', 'table-tennis'] }), env });
 assert.equal(secondSubmitted.status, 201);
 const secondSubmission = await secondSubmitted.json();
+assert.equal(db.registrations.find((registration) => registration.registration_no === secondSubmission.registrationNo).class_name, '三年忠班');
 
 const batchPrinted = await batchNotices({ request: post('http://local/api/admin/notices', { registrationNos: [submission.registrationNo, secondSubmission.registrationNo] }, adminHeaders), env });
 assert.equal(batchPrinted.status, 200);

@@ -19,7 +19,6 @@ const modules = [
   "functions/api/admin/notice.js",
   "functions/api/admin/notices.js",
   "functions/api/admin/class-notices.js",
-  "functions/api/admin/registration.js",
 ];
 const projectFiles = [
   "index.html",

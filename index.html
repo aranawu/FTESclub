@@ -38,7 +38,7 @@
         <div class="field-grid">
           <label>學生姓名<input id="studentName" name="studentName" required maxlength="40" autocomplete="name" placeholder="例如：王小明"></label>
           <label>年級<select id="grade" name="grade" required><option value="">請選擇</option><option>1年級</option><option>2年級</option><option>3年級</option><option>4年級</option><option>5年級</option><option>6年級</option></select></label>
-          <label>班級<input id="className" name="className" required maxlength="20" autocomplete="organization-title" placeholder="例如：甲班、1班"><small>用於彙整班級通知單。</small></label>
+          <label>班級<input id="className" name="className" required readonly aria-readonly="true" placeholder="選擇年級後自動帶入"><small>班級由年級自動設定為「○年忠班」。</small></label>
           <label>學生身分證字號<input id="studentId" name="studentId" required maxlength="10" autocomplete="off" placeholder="A123456789" spellcheck="false"><small>傳送時使用 HTTPS；後端不保存明碼。</small></label>
           <label>家長聯絡電話<input id="guardianPhone" name="guardianPhone" required maxlength="20" autocomplete="tel" placeholder="09xxxxxxxx"></label>
           <label class="field-span">家長電子郵件<input id="guardianEmail" name="guardianEmail" type="email" required maxlength="120" autocomplete="email" placeholder="parent@example.com"><small>報名收件通知與錄取／候補結果將寄到此信箱。</small></label>
