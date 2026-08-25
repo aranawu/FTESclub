@@ -105,7 +105,7 @@ form.addEventListener('submit', async (event) => {
     form.reset();
     renderChoices();
     successPanel.classList.remove('hidden');
-    successPanel.innerHTML = `<p class="eyebrow dark">報名已送出</p><h2>報名編號：<span class="accent">${escapeHtml(data.registrationNo)}</span></h2><p>${data.emailSent ? '報名收件通知已寄到家長信箱。' : '報名已保存，但寄信服務尚未完成設定；請先保存報名編號。'}人工審核完成後，系統會寄發錄取或候補結果。</p>`;
+    successPanel.innerHTML = `<p class="eyebrow dark">報名已送出</p><h2>報名編號：<span class="accent">${escapeHtml(data.registrationNo)}</span></h2><p>${data.emailSent ? '報名收件通知已寄到家長信箱。' : '報名已保存，但寄信服務尚未完成設定；請先保存報名編號。'}所有社團均由學校人工審查，完成後系統會寄發錄取、候補或未錄取結果。</p>`;
     successPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
   } catch (error) {
     showMessage(error.message, 'error');

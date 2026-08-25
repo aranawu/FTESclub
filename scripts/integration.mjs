@@ -93,6 +93,9 @@ assert.match(submission.registrationNo, /^115-/);
 assert.equal(submission.emailSent, false);
 assert.equal(db.registrations[0].student_id_masked, 'A******789');
 assert.equal(db.registrations[0].class_name, '二年忠班');
+assert.equal(db.choices.length, 2);
+assert.ok(db.choices.every((choice) => choice.status === 'pending'), '不限額與有限額社團都必須先進入人工審核');
+assert.ok(submission.choices.every((choice) => choice.status === 'pending'), '報名回應不得自動錄取任何社團');
 assert.deepEqual(CLASS_BY_GRADE, {
   '1年級': '一年忠班', '2年級': '二年忠班', '3年級': '三年忠班',
   '4年級': '四年忠班', '5年級': '五年忠班', '6年級': '六年忠班',
