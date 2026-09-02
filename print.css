@@ -207,37 +207,212 @@ body.club-roster-page {
   max-width: 790px;
   min-height: 255mm;
   margin: 28px auto;
-  padding: 44px;
-}
-
-.personal-notice-page .head {
-  padding: 4px 0 18px;
-  border-bottom: 4px solid #77a949;
-}
-
-.personal-notice-page .meta div {
-  border: 1px solid #d5e2b8;
-  border-radius: 14px;
-  background: #f2f7e6;
-}
-
-.personal-notice-page table {
-  border-radius: 14px;
+  padding: 42px;
   overflow: hidden;
 }
 
-.personal-notice-page th {
+.personal-notice-page .notice-hero {
+  position: relative;
+  margin: -42px -42px 24px;
+  padding: 34px 42px 28px;
+  text-align: center;
+  color: #fff;
+  background: linear-gradient(145deg, #4f873e, #76a746);
+  border-bottom: 8px solid var(--field-yellow);
+}
+
+.personal-notice-page .notice-hero::before,
+.personal-notice-page .notice-hero::after {
+  position: absolute;
+  bottom: -4px;
+  font-size: 34px;
+  content: "🌿";
+}
+
+.personal-notice-page .notice-hero::before {
+  left: 24px;
+}
+
+.personal-notice-page .notice-hero::after {
+  right: 24px;
+  transform: scaleX(-1);
+}
+
+.personal-notice-page .notice-kicker,
+.personal-notice-page .notice-hero h1,
+.personal-notice-page .notice-hero > p:last-child {
+  margin: 4px 0;
+}
+
+.personal-notice-page .notice-kicker {
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+.personal-notice-page .notice-hero h1 {
+  font-size: 30px;
+  letter-spacing: 0.08em;
+}
+
+.personal-notice-page .notice-hero > p:last-child {
+  color: #f6ffdf;
+}
+
+.personal-notice-page .greeting {
+  margin: 0 0 16px;
+  color: #53634b;
+  text-align: center;
+}
+
+.personal-notice-page .student-meta {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1.2fr;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.personal-notice-page .student-meta > div {
+  padding: 11px 14px;
+  text-align: center;
+  background: #f2f7e6;
+  border: 1px solid #d5e2b8;
+  border-radius: 15px;
+}
+
+.personal-notice-page .student-meta span,
+.personal-notice-page .student-meta strong {
+  display: block;
+}
+
+.personal-notice-page .student-meta span {
+  margin-bottom: 3px;
+  color: #6d795d;
+  font-size: 12px;
+}
+
+.personal-notice-page .student-meta strong {
+  color: var(--field-green-dark);
+  font-size: 17px;
+}
+
+.personal-notice-page .club-day-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.personal-notice-page .day-card {
+  min-height: 270px;
+  padding: 17px;
+  background: #f8fbef;
+  border: 2px solid #bdd49a;
+  border-radius: 22px;
+}
+
+.personal-notice-page .day-friday {
+  background: #fffaf0;
+  border-color: #efd27c;
+}
+
+.personal-notice-page .day-empty {
+  color: #7b816f;
+  background: #f5f4ee;
+  border-color: #d6d4c8;
+  border-style: dashed;
+}
+
+.personal-notice-page .day-card > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.personal-notice-page .day-pill,
+.personal-notice-page .result-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 900;
+  border-radius: 999px;
+}
+
+.personal-notice-page .day-pill {
   color: #315d2d;
-  background: #eaf3d8;
+  background: #e7f1d4;
 }
 
-.personal-notice-page th,
-.personal-notice-page td {
-  border-color: #aab990;
+.personal-notice-page .day-friday .day-pill {
+  color: #745600;
+  background: #fff0b7;
 }
 
-.personal-notice-page .result {
-  color: #39713c;
+.personal-notice-page .result-pill.accepted {
+  color: #fff;
+  background: #4c8a49;
+}
+
+.personal-notice-page .result-pill.waitlist,
+.personal-notice-page .result-pill.pending {
+  color: #6c5300;
+  background: #ffe17a;
+}
+
+.personal-notice-page .result-pill.rejected {
+  color: #fff;
+  background: #bc6262;
+}
+
+.personal-notice-page .result-pill.empty {
+  color: #6f7467;
+  background: #e5e3da;
+}
+
+.personal-notice-page .day-card h2 {
+  min-height: 58px;
+  margin: 19px 0 12px;
+  color: var(--field-green-dark);
+  font-size: 21px;
+  line-height: 1.35;
+}
+
+.personal-notice-page .club-facts {
+  margin: 0;
+}
+
+.personal-notice-page .club-facts > div {
+  padding: 9px 0;
+  border-top: 1px dashed #c2cfac;
+}
+
+.personal-notice-page .club-facts dt {
+  color: #768166;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.personal-notice-page .club-facts dd {
+  margin: 3px 0 0;
+  color: #344231;
+  font-weight: 700;
+}
+
+.personal-notice-page .empty-copy {
+  margin-top: 32px;
+  text-align: center;
+}
+
+.personal-notice-page .notice-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 24px;
+  padding-top: 13px;
+  color: #68745d;
+  border-top: 1px dashed #b9c7a1;
+  font-size: 12px;
 }
 
 .club-roster-page .sheet {
@@ -365,6 +540,28 @@ body.club-roster-page {
     padding: 18px;
     border-radius: 20px;
   }
+
+  .personal-notice-page .notice-hero {
+    margin: -18px -18px 20px;
+    padding: 28px 20px 24px;
+  }
+
+  .personal-notice-page .notice-hero h1 {
+    font-size: 24px;
+  }
+
+  .personal-notice-page .student-meta,
+  .personal-notice-page .club-day-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .personal-notice-page .day-card {
+    min-height: 0;
+  }
+
+  .personal-notice-page .notice-footer {
+    flex-direction: column;
+  }
 }
 
 @media print {
@@ -390,6 +587,10 @@ body.club-roster-page {
     border: 0;
     border-radius: 0;
     box-shadow: none;
+  }
+
+  .personal-notice-page .notice-hero {
+    margin: 0 0 18px;
   }
 
   .class-notice-page .student-overview-section,

@@ -18,6 +18,7 @@ export async function onRequestPost({ request, env }) {
 
     const registration = await getRegistration(env.DB, registrationNo);
     if (!registration || !registration.choices.some((choice) => choice.clubId === clubId)) return json({ error: '找不到此學生的社團報名。' }, 404);
+    const previousChoice = registration.choices.find((choice) => choice.clubId === clubId);
 
     const club = CLUB_MAP.get(clubId);
     if (status === 'accepted' && club.capacity !== null) {
@@ -37,6 +38,7 @@ export async function onRequestPost({ request, env }) {
         FROM registration_choices WHERE club_id = ? AND status = 'waitlist'`).bind(clubId).first();
       waitlistNo = Number(row?.next_no || 1);
     }
+    const decisionChanged = previousChoice.status !== status || Number(previousChoice.waitlistNo || 0) !== Number(waitlistNo || 0);
     const now = new Date().toISOString();
     const update = await env.DB.prepare(`UPDATE registration_choices
       SET status = ?, waitlist_no = ?, reviewed_at = ?
@@ -45,6 +47,13 @@ export async function onRequestPost({ request, env }) {
     if (!update.meta?.changes) return json({ error: '沒有更新任何資料。' }, 404);
 
     const updated = await getRegistration(env.DB, registrationNo);
+    const reviewComplete = updated.choices.every((choice) => choice.status !== 'pending');
+    if (!reviewComplete) {
+      return json({ registration: updated, emailSent: false, emailReason: 'REVIEW_INCOMPLETE', reviewComplete: false });
+    }
+    if (!decisionChanged && updated.choices.every((choice) => choice.resultEmailSentAt)) {
+      return json({ registration: updated, emailSent: false, emailReason: 'UNCHANGED', reviewComplete: true });
+    }
     const mail = await sendMail(env, {
       to: updated.guardianEmail,
       ...resultEmail(updated, env.SCHOOL_NAME || '學校'),
@@ -53,10 +62,10 @@ export async function onRequestPost({ request, env }) {
       await env.DB.batch([
         env.DB.prepare('UPDATE registrations SET last_result_email_at = ? WHERE registration_no = ?').bind(now, registrationNo),
         env.DB.prepare(`UPDATE registration_choices SET result_email_sent_at = ?
-          WHERE registration_id = (SELECT id FROM registrations WHERE registration_no = ?) AND club_id = ?`).bind(now, registrationNo, clubId),
+          WHERE registration_id = (SELECT id FROM registrations WHERE registration_no = ?)`).bind(now, registrationNo),
       ]);
     }
-    return json({ registration: await getRegistration(env.DB, registrationNo), emailSent: mail.sent, emailReason: mail.reason || null });
+    return json({ registration: await getRegistration(env.DB, registrationNo), emailSent: mail.sent, emailReason: mail.reason || null, reviewComplete: true });
   } catch (error) {
     return handleApiError(error);
   }

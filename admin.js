@@ -80,7 +80,7 @@ function applicantHtml(registration, choice) {
     <div class="applicant-actions">
       <select data-status aria-label="${escapeHtml(registration.studentName)}審核結果"><option value="pending" ${selected('pending')}>待審核</option><option value="accepted" ${selected('accepted')}>錄取</option><option value="waitlist" ${selected('waitlist')}>候補</option><option value="rejected" ${selected('rejected')}>未錄取</option></select>
       <input class="candidate-input ${waitlistHidden}" data-waitlist type="number" min="1" value="${escapeHtml(choice.waitlistNo || '')}" placeholder="候補序號" ${choice.status === 'waitlist' ? '' : 'disabled'}>
-      <button class="primary-button compact-button" data-save data-registration="${escapeHtml(registration.registrationNo)}" data-club="${escapeHtml(choice.clubId)}">儲存並寄送</button>
+      <button class="primary-button compact-button" data-save data-registration="${escapeHtml(registration.registrationNo)}" data-club="${escapeHtml(choice.clubId)}">儲存審核結果</button>
       <button class="link-button" data-print="${escapeHtml(registration.registrationNo)}">個別通知單</button>
     </div>
     <small class="email-state">目前：${escapeHtml(statusText(choice.status, choice.waitlistNo))}${choice.resultEmailSentAt ? ` · 已寄信 ${new Date(choice.resultEmailSentAt).toLocaleString('zh-TW')}` : ''}</small>
@@ -116,12 +116,15 @@ async function saveDecision(button) {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ registrationNo: button.dataset.registration, clubId: button.dataset.club, status, waitlistNo }),
     });
-    setMessage(data.emailSent ? '結果已儲存並寄送家長。' : '結果已儲存，但寄信服務未完成設定或寄送失敗。', data.emailSent ? 'success' : 'warning-text');
+    if (data.emailSent) setMessage('星期三與星期五結果已統整，並寄送一封結果信給家長。', 'success');
+    else if (data.emailReason === 'REVIEW_INCOMPLETE') setMessage('審核已儲存；待該生所有社團結果都完成後，系統才會寄送一封統整結果信。', 'success');
+    else if (data.emailReason === 'UNCHANGED') setMessage('審核結果沒有變更，因此未重複寄信。', 'success');
+    else setMessage('結果已儲存，但寄信服務未完成設定或寄送失敗。', 'warning-text');
     await loadData();
   } catch (error) {
     setMessage(error.message, 'error');
     button.disabled = false;
-    button.textContent = '儲存並寄送';
+    button.textContent = '儲存審核結果';
   }
 }
 

@@ -8,6 +8,7 @@ import { onRequestGet as classNotices } from '../functions/api/admin/class-notic
 import { onRequestGet as clubRosters } from '../functions/api/admin/club-rosters.js';
 import { onRequestPost as batchNotices } from '../functions/api/admin/notices.js';
 import { CLASS_BY_GRADE, CLUB_MAP } from '../lib/clubs.js';
+import { resultEmail } from '../lib/email.js';
 
 class Statement {
   constructor(db, sql) { this.db = db; this.sql = sql.replace(/\s+/g, ' ').trim(); this.args = []; }
@@ -75,9 +76,9 @@ class FakeD1 {
     }
     if (sql.startsWith('UPDATE registration_choices SET result_email_sent_at')) {
       const registrationId = this.registrations.find((item) => item.registration_no === args[1])?.id;
-      const choice = this.choices.find((item) => item.registration_id === registrationId && item.club_id === args[2]);
-      if (choice) choice.result_email_sent_at = args[0];
-      return { meta: { changes: choice ? 1 : 0 } };
+      const choices = this.choices.filter((item) => item.registration_id === registrationId);
+      choices.forEach((choice) => { choice.result_email_sent_at = args[0]; });
+      return { meta: { changes: choices.length } };
     }
     throw new Error(`Unhandled run SQL: ${sql}`);
   }
@@ -128,9 +129,20 @@ assert.equal(decided.status, 200);
 const decision = await decided.json();
 assert.equal(decision.registration.choices.find((choice) => choice.clubId === 'flute').status, 'accepted');
 assert.equal(decision.emailSent, false);
+assert.equal(decision.emailReason, 'REVIEW_INCOMPLETE');
+assert.equal(decision.reviewComplete, false);
 
 const rejectedDecision = await decide({ request: post('http://local/api/admin/decision', { registrationNo: submission.registrationNo, clubId: 'yushan-english', status: 'rejected' }, adminHeaders), env });
 assert.equal(rejectedDecision.status, 200);
+const rejectedDecisionData = await rejectedDecision.json();
+assert.equal(rejectedDecisionData.emailReason, 'EMAIL_NOT_CONFIGURED');
+assert.equal(rejectedDecisionData.reviewComplete, true);
+const consolidatedEmail = resultEmail(rejectedDecisionData.registration, '測試國小').html;
+assert.ok(consolidatedEmail.includes('星期三'));
+assert.ok(consolidatedEmail.includes('星期五'));
+assert.ok(consolidatedEmail.includes('直笛音樂社'));
+assert.ok(consolidatedEmail.includes('玉山英語社'));
+assert.ok(!consolidatedEmail.includes('身分證識別'));
 
 const printed = await notice({ request: new Request(`http://local/api/admin/notice?registrationNo=${submission.registrationNo}`, { headers: adminHeaders }), env });
 assert.equal(printed.status, 200);
@@ -143,6 +155,15 @@ assert.ok(printedHtml.includes('http://local/print.css'));
 assert.ok(printedHtml.includes('class="personal-notice-page"'));
 assert.ok(printedHtml.includes('data-print-button'));
 assert.ok(!printedHtml.includes('onclick='));
+assert.ok(printedHtml.includes('星期三'));
+assert.ok(printedHtml.includes('星期五'));
+assert.ok(printedHtml.includes('直笛音樂社'));
+assert.ok(printedHtml.includes('玉山英語社'));
+assert.ok(printedHtml.includes('class="club-day-grid"'));
+assert.ok(printedHtml.includes('class="notice-hero"'));
+assert.ok(!printedHtml.includes('身分證識別'));
+assert.ok(!printedHtml.includes('A******789'));
+assert.equal((printedHtml.match(/data-print-sheet/g) || []).length, 1);
 
 const classPrinted = await classNotices({ request: new Request('http://local/api/admin/class-notices', { headers: adminHeaders }), env });
 assert.equal(classPrinted.status, 200);
