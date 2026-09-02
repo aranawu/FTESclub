@@ -2,6 +2,7 @@ import { CLUB_MAP } from '../../../lib/clubs.js';
 import { getRegistration } from '../../../lib/data.js';
 import { resultEmail, sendMail } from '../../../lib/email.js';
 import { handleApiError, json, readJson, requireAdmin } from '../../../lib/http.js';
+import { validEmail } from '../../../lib/security.js';
 
 const STATUSES = new Set(['pending', 'accepted', 'waitlist', 'rejected']);
 
@@ -53,6 +54,9 @@ export async function onRequestPost({ request, env }) {
     }
     if (!decisionChanged && updated.choices.every((choice) => choice.resultEmailSentAt)) {
       return json({ registration: updated, emailSent: false, emailReason: 'UNCHANGED', reviewComplete: true });
+    }
+    if (!validEmail(updated.guardianEmail)) {
+      return json({ registration: updated, emailSent: false, emailReason: 'NO_EMAIL', reviewComplete: true });
     }
     const mail = await sendMail(env, {
       to: updated.guardianEmail,

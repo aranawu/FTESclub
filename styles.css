@@ -168,6 +168,15 @@ button:not(:disabled):hover { transform:translateY(-1px); box-shadow:0 5px 12px 
 .admin-group { border-left:7px solid #84b64f; }
 .applicant-row { border-color:#edf1df; }
 .capacity-unlimited { color:#39713c; background:#eef6df; border-radius:999px; padding:6px 12px; }
+.manual-add-button { color:#654900; background:linear-gradient(145deg,#ffe47b,#f5bc3f); border:2px solid #e4a829; box-shadow:0 4px 0 #c68c1f; }
+.manual-registration-card { position:relative; overflow:hidden; border-top:7px solid #f1bb3e; background:linear-gradient(145deg,#fffef8,#fff9dc); }
+.manual-registration-card::after { content:"🌻"; position:absolute; right:22px; bottom:10px; font-size:44px; opacity:.18; transform:rotate(9deg); pointer-events:none; }
+.manual-registration-heading { display:flex; justify-content:space-between; align-items:flex-start; gap:18px; padding-bottom:16px; border-bottom:2px dashed #d9dfa7; }
+.manual-registration-form { display:grid; gap:22px; margin-top:20px; }
+.manual-club-section { display:grid; gap:10px; }
+.manual-club-section h3 { margin:0; color:#315d2d; }
+.manual-form-actions { display:flex; gap:10px; flex-wrap:wrap; }
+.manual-registration-form .form-message:not(:empty) { padding:11px 14px; border-radius:14px; background:#f3f7e7; }
 
 @media (max-width:720px) {
   .hero { min-height:340px; padding:30px 18px 80px; }
@@ -182,6 +191,7 @@ button:not(:disabled):hover { transform:translateY(-1px); box-shadow:0 5px 12px 
   .page-shell { margin-top:-38px; }
   .rule-grid { grid-template-columns:1fr; }
   .toolbar-actions > button { flex:1 1 auto; }
+  .manual-registration-heading { align-items:stretch; flex-direction:column; }
 }
 
 @media (prefers-reduced-motion:reduce) {

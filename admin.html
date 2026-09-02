@@ -25,7 +25,25 @@
     <div id="adminPanel" class="hidden">
       <section class="toolbar card">
         <div><p class="eyebrow dark">目前資料</p><h2 id="summaryTitle">正在載入…</h2><p id="summaryText" class="helper"></p></div>
-        <div class="toolbar-actions"><button id="refreshData" class="secondary-button">重新整理</button><button id="classNotices" class="primary-button">班級通知單</button><button id="clubRosters" class="primary-button">各社團名單</button><button id="selectAllNotices" class="secondary-button">全選學生</button><button id="batchNotices" class="primary-button" disabled>列印個人通知單（0）</button><button id="exportCsv" class="secondary-button">匯出 CSV</button><button id="logout" class="danger-button">登出</button></div>
+        <div class="toolbar-actions"><button id="toggleManualRegistration" class="manual-add-button" type="button" aria-controls="manualRegistrationPanel" aria-expanded="false">＋ 手動新增報名</button><button id="refreshData" class="secondary-button">重新整理</button><button id="classNotices" class="primary-button">班級通知單</button><button id="clubRosters" class="primary-button">各社團名單</button><button id="selectAllNotices" class="secondary-button">全選學生</button><button id="batchNotices" class="primary-button" disabled>列印個人通知單（0）</button><button id="exportCsv" class="secondary-button">匯出 CSV</button><button id="logout" class="danger-button">登出</button></div>
+      </section>
+      <section id="manualRegistrationPanel" class="card manual-registration-card hidden">
+        <div class="manual-registration-heading">
+          <div><p class="eyebrow dark">承辦人補登</p><h2>手動新增學生報名</h2><p class="helper">適用於姓名填寫錯誤或家長無法自行報名的情況。後台補登不需要學生身分證字號，新增後仍須人工審核。</p></div>
+          <button id="closeManualRegistration" class="secondary-button compact-button" type="button">收起</button>
+        </div>
+        <form id="manualRegistrationForm" class="manual-registration-form" novalidate>
+          <div class="field-grid">
+            <label>學生姓名<input id="manualStudentName" name="studentName" required maxlength="40" autocomplete="off" placeholder="例如：王小明"></label>
+            <label>年級<select id="manualGrade" name="grade" required><option value="">請選擇</option><option>1年級</option><option>2年級</option><option>3年級</option><option>4年級</option><option>5年級</option><option>6年級</option></select></label>
+            <label>班級<input id="manualClassName" name="className" readonly aria-readonly="true" placeholder="選擇年級後自動帶入"><small>班級固定為「○年忠班」。</small></label>
+            <label>家長聯絡電話（選填）<input id="manualGuardianPhone" name="guardianPhone" maxlength="20" autocomplete="off" placeholder="09xxxxxxxx"></label>
+            <label class="field-span">家長電子郵件（選填）<input id="manualGuardianEmail" name="guardianEmail" type="email" maxlength="120" autocomplete="off" placeholder="parent@example.com"><small>有填信箱會寄送收件與審核結果；未填則請使用紙本通知單。</small></label>
+          </div>
+          <div class="manual-club-section"><h3>選擇社團</h3><div id="manualClubChoices" class="choice-grid" aria-live="polite"><p class="loading">正在載入社團資料…</p></div><p class="helper">至少選擇一個社團，星期三與星期五最多各一個。</p></div>
+          <div class="manual-form-actions"><button id="submitManualRegistration" class="primary-button" type="submit">新增報名</button><button id="resetManualRegistration" class="secondary-button" type="reset">清除欄位</button></div>
+          <div id="manualRegistrationMessage" class="form-message" role="status" aria-live="polite"></div>
+        </form>
       </section>
       <div id="adminMessage" class="form-message" role="status" aria-live="polite"></div>
       <section id="adminGroups" class="admin-groups"></section>

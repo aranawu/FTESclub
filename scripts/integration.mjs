@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { onRequestPost as register } from '../functions/api/register.js';
 import { onRequestPost as login } from '../functions/api/admin/login.js';
-import { onRequestGet as list } from '../functions/api/admin/registrations.js';
+import { onRequestGet as list, onRequestPost as manualRegister } from '../functions/api/admin/registrations.js';
 import { onRequestPost as decide } from '../functions/api/admin/decision.js';
 import { onRequestGet as notice } from '../functions/api/admin/notice.js';
 import { onRequestGet as classNotices } from '../functions/api/admin/class-notices.js';
@@ -121,9 +121,25 @@ const loginData = await loggedIn.json();
 assert.ok(loginData.token);
 const adminHeaders = { authorization: `Bearer ${loginData.token}` };
 
+const unauthorizedManual = await manualRegister({ request: post('http://local/api/admin/registrations', { studentName: '後台學生', grade: '1年級', clubs: ['young-english'] }), env });
+assert.equal(unauthorizedManual.status, 401);
+const invalidManual = await manualRegister({ request: post('http://local/api/admin/registrations', { studentName: '後台學生', grade: '3年級', clubs: ['flute', 'diabolo'] }, adminHeaders), env });
+assert.equal(invalidManual.status, 400);
+const manualAdded = await manualRegister({ request: post('http://local/api/admin/registrations', { studentName: '後台學生', grade: '1年級', guardianPhone: '', guardianEmail: '', clubs: ['young-english'] }, adminHeaders), env });
+assert.equal(manualAdded.status, 201);
+const manualData = await manualAdded.json();
+assert.match(manualData.registrationNo, /^115-/);
+assert.equal(manualData.emailSent, false);
+assert.equal(manualData.emailReason, 'NO_EMAIL');
+assert.ok(manualData.choices.every((choice) => choice.status === 'pending'));
+const manualRegistration = db.registrations.find((registration) => registration.registration_no === manualData.registrationNo);
+assert.equal(manualRegistration.class_name, '一年忠班');
+assert.equal(manualRegistration.student_id_masked, '後台新增');
+assert.match(manualRegistration.student_id_hash, /^admin:/);
+
 const listed = await list({ request: new Request('http://local/api/admin/registrations', { headers: adminHeaders }), env });
 assert.equal(listed.status, 200);
-assert.equal((await listed.json()).registrations.length, 1);
+assert.equal((await listed.json()).registrations.length, 2);
 
 const decided = await decide({ request: post('http://local/api/admin/decision', { registrationNo: submission.registrationNo, clubId: 'flute', status: 'accepted' }, adminHeaders), env });
 assert.equal(decided.status, 200);
@@ -138,6 +154,12 @@ assert.equal(rejectedDecision.status, 200);
 const rejectedDecisionData = await rejectedDecision.json();
 assert.equal(rejectedDecisionData.emailReason, 'EMAIL_NOT_CONFIGURED');
 assert.equal(rejectedDecisionData.reviewComplete, true);
+const manualDecision = await decide({ request: post('http://local/api/admin/decision', { registrationNo: manualData.registrationNo, clubId: 'young-english', status: 'accepted' }, adminHeaders), env });
+assert.equal(manualDecision.status, 200);
+const manualDecisionData = await manualDecision.json();
+assert.equal(manualDecisionData.emailSent, false);
+assert.equal(manualDecisionData.emailReason, 'NO_EMAIL');
+assert.equal(manualDecisionData.reviewComplete, true);
 const consolidatedEmail = resultEmail(rejectedDecisionData.registration, '測試國小').html;
 assert.ok(consolidatedEmail.includes('星期三'));
 assert.ok(consolidatedEmail.includes('星期五'));
@@ -240,4 +262,4 @@ assert.ok(batchPrintedHtml.includes('第二位學生'));
 assert.equal((batchPrintedHtml.match(/class="sheet"/g) || []).length, 2);
 assert.ok(batchPrintedHtml.includes('列印／另存 PDF（共 2 位）'));
 
-console.log('Integration test passed: registration, duplicate protection, validation, admin auth, review, individual notices, class notices, and club rosters.');
+console.log('Integration test passed: public and manual registration, duplicate protection, validation, admin auth, review, individual notices, class notices, and club rosters.');
