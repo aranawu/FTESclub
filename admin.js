@@ -189,6 +189,7 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
 
 document.getElementById('refreshData').addEventListener('click', () => loadData().catch((error) => setMessage(error.message, 'error')));
 document.getElementById('classNotices').addEventListener('click', () => openPrintable('/api/admin/class-notices', '無法產生班級通知單。'));
+document.getElementById('clubRosters').addEventListener('click', () => openPrintable('/api/admin/club-rosters', '無法產生社團名單。'));
 document.getElementById('batchNotices').addEventListener('click', printSelectedNotices);
 document.getElementById('selectAllNotices').addEventListener('click', () => {
   if (registrations.length > 0 && selectedNoticeNos.size === registrations.length) selectedNoticeNos.clear();

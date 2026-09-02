@@ -10,7 +10,8 @@
 }
 
 body.class-notice-page,
-body.personal-notice-page {
+body.personal-notice-page,
+body.club-roster-page {
   color: var(--field-ink);
   background-color: var(--field-cream);
   background-image: radial-gradient(circle at 18px 18px, rgba(123, 159, 72, 0.08) 2px, transparent 2px);
@@ -18,7 +19,8 @@ body.personal-notice-page {
 }
 
 .class-notice-page .tools,
-.personal-notice-page .actions {
+.personal-notice-page .actions,
+.club-roster-page .tools {
   position: sticky;
   top: 0;
   z-index: 10;
@@ -35,7 +37,8 @@ body.personal-notice-page {
 }
 
 .class-notice-page .tools::before,
-.personal-notice-page .actions::before {
+.personal-notice-page .actions::before,
+.club-roster-page .tools::before {
   content: "🌾 豐田國小社團通知單";
   margin-right: 12px;
   font-weight: 800;
@@ -46,9 +49,20 @@ body.personal-notice-page {
   font-weight: 800;
 }
 
+.club-roster-page .tools label {
+  font-weight: 800;
+}
+
+.class-notice-page .sheet.filtered-out,
+.club-roster-page .club-sheet.filtered-out {
+  display: none;
+}
+
 .class-notice-page .tools select,
 .class-notice-page .tools button,
-.personal-notice-page .actions button {
+.personal-notice-page .actions button,
+.club-roster-page .tools select,
+.club-roster-page .tools button {
   min-height: 40px;
   border: 1px solid rgba(255, 255, 255, 0.52);
   border-radius: 999px;
@@ -58,20 +72,23 @@ body.personal-notice-page {
   cursor: pointer;
 }
 
-.class-notice-page .tools select {
+.class-notice-page .tools select,
+.club-roster-page .tools select {
   color: var(--field-green-dark);
   background: #fff;
 }
 
 .class-notice-page .tools button,
-.personal-notice-page .actions button {
+.personal-notice-page .actions button,
+.club-roster-page .tools button {
   color: #4d481e;
   background: linear-gradient(145deg, #ffe779, var(--field-yellow));
   box-shadow: 0 4px 0 #c5a424;
 }
 
 .class-notice-page .sheet,
-.personal-notice-page .sheet {
+.personal-notice-page .sheet,
+.club-roster-page .sheet {
   background: var(--field-paper);
   border: 2px solid var(--field-line);
   border-radius: 26px;
@@ -223,21 +240,126 @@ body.personal-notice-page {
   color: #39713c;
 }
 
+.club-roster-page .sheet {
+  width: min(195mm, calc(100% - 32px));
+  min-height: 272mm;
+  margin: 28px auto;
+  padding: 12mm;
+  break-after: page;
+}
+
+.club-roster-page .sheet:last-child {
+  break-after: auto;
+}
+
+.club-roster-page .sheet > header {
+  padding-bottom: 12px;
+  text-align: center;
+  border-bottom: 4px solid #77a949;
+}
+
+.club-roster-page .sheet > header p,
+.club-roster-page footer {
+  color: #6d795d;
+}
+
+.club-roster-page .sheet > header p,
+.club-roster-page .sheet > header h1 {
+  margin: 3px 0;
+}
+
+.club-roster-page .sheet > header h1 {
+  color: var(--field-green-dark);
+  font-size: 25px;
+}
+
+.club-roster-page .club-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 14px;
+  margin-top: 9px;
+  font-size: 12px;
+}
+
+.club-roster-page .roster-summary {
+  display: flex;
+  justify-content: space-between;
+  margin: 14px 0 8px;
+  padding: 9px 12px;
+  color: #315d2d;
+  background: #edf4df;
+  border: 1px solid var(--field-line);
+  border-radius: 12px;
+}
+
+.club-roster-page table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.club-roster-page th,
+.club-roster-page td {
+  height: 32px;
+  padding: 6px 4px;
+  text-align: center;
+  border: 1px solid #9eae87;
+  font-size: 12px;
+}
+
+.club-roster-page th {
+  color: #315d2d;
+  background: #edf4df;
+}
+
+.club-roster-page th:first-child,
+.club-roster-page td:first-child {
+  width: 7%;
+}
+
+.club-roster-page th:nth-child(2),
+.club-roster-page td:nth-child(2) {
+  width: 13%;
+}
+
+.club-roster-page th:nth-child(3),
+.club-roster-page td:nth-child(3) {
+  width: 14%;
+}
+
+.club-roster-page th:nth-child(4),
+.club-roster-page td:nth-child(4) {
+  width: 29%;
+}
+
+.club-roster-page footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px dashed #b9c7a1;
+  font-size: 11px;
+}
+
 @media (max-width: 720px) {
   .class-notice-page .tools,
-  .personal-notice-page .actions {
+  .personal-notice-page .actions,
+  .club-roster-page .tools {
     flex-wrap: wrap;
   }
 
   .class-notice-page .tools::before,
-  .personal-notice-page .actions::before {
+  .personal-notice-page .actions::before,
+  .club-roster-page .tools::before {
     width: 100%;
     margin: 0;
     text-align: center;
   }
 
   .class-notice-page .sheet,
-  .personal-notice-page .sheet {
+  .personal-notice-page .sheet,
+  .club-roster-page .sheet {
     width: calc(100% - 16px);
     margin: 12px auto;
     padding: 18px;
@@ -247,17 +369,20 @@ body.personal-notice-page {
 
 @media print {
   body.class-notice-page,
-  body.personal-notice-page {
+  body.personal-notice-page,
+  body.club-roster-page {
     background: #fff;
   }
 
   .class-notice-page .tools,
-  .personal-notice-page .actions {
+  .personal-notice-page .actions,
+  .club-roster-page .tools {
     display: none;
   }
 
   .class-notice-page .sheet,
-  .personal-notice-page .sheet {
+  .personal-notice-page .sheet,
+  .club-roster-page .sheet {
     width: auto;
     min-height: 0;
     margin: 0;
@@ -270,5 +395,9 @@ body.personal-notice-page {
   .class-notice-page .student-overview-section,
   .class-notice-page .result-section {
     border-radius: 0;
+  }
+
+  .club-roster-page .club-sheet.filtered-out {
+    display: none;
   }
 }

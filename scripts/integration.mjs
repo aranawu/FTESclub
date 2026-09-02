@@ -5,6 +5,7 @@ import { onRequestGet as list } from '../functions/api/admin/registrations.js';
 import { onRequestPost as decide } from '../functions/api/admin/decision.js';
 import { onRequestGet as notice } from '../functions/api/admin/notice.js';
 import { onRequestGet as classNotices } from '../functions/api/admin/class-notices.js';
+import { onRequestGet as clubRosters } from '../functions/api/admin/club-rosters.js';
 import { onRequestPost as batchNotices } from '../functions/api/admin/notices.js';
 import { CLASS_BY_GRADE, CLUB_MAP } from '../lib/clubs.js';
 
@@ -169,6 +170,20 @@ assert.equal(CLUB_MAP.get('young-english').location, '多功能教室');
 assert.equal(CLUB_MAP.get('yushan-english').location, '音樂教室');
 assert.equal(CLUB_MAP.get('table-tennis').location, '活動中心B1');
 
+const clubRosterResponse = await clubRosters({ request: new Request('http://local/api/admin/club-rosters', { headers: adminHeaders }), env });
+assert.equal(clubRosterResponse.status, 200);
+const clubRosterHtml = await clubRosterResponse.text();
+assert.ok(clubRosterHtml.includes('課後社團名單'));
+assert.ok(clubRosterHtml.includes('顯示社團'));
+assert.ok(clubRosterHtml.includes('測試學生'));
+assert.ok(clubRosterHtml.includes('直笛音樂社'));
+assert.ok(clubRosterHtml.includes('二年忠班'));
+assert.ok(clubRosterHtml.includes('<th>上課時間</th>'));
+assert.ok(clubRosterHtml.includes('<th>開始日期</th>'));
+assert.ok(clubRosterHtml.includes('<th>地點</th>'));
+assert.ok(clubRosterHtml.includes('本名單僅列已錄取學生'));
+assert.ok(!clubRosterHtml.includes('家長電子郵件'));
+
 const secondSubmitted = await register({ request: post('http://local/api/register', { studentName: '第二位學生', grade: '3年級', className: '甲班', studentId: 'A223456781', guardianPhone: '0912345678', guardianEmail: 'parent2@example.com', clubs: ['flute', 'table-tennis'] }), env });
 assert.equal(secondSubmitted.status, 201);
 const secondSubmission = await secondSubmitted.json();
@@ -182,4 +197,4 @@ assert.ok(batchPrintedHtml.includes('第二位學生'));
 assert.equal((batchPrintedHtml.match(/class="sheet"/g) || []).length, 2);
 assert.ok(batchPrintedHtml.includes('列印／另存 PDF（共 2 位）'));
 
-console.log('Integration test passed: registration, duplicate protection, validation, admin auth, review, individual notice, and class notices.');
+console.log('Integration test passed: registration, duplicate protection, validation, admin auth, review, individual notices, class notices, and club rosters.');
