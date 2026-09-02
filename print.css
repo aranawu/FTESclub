@@ -584,21 +584,115 @@ body.club-roster-page {
   }
 
   .personal-notice-page .notice-hero {
-    margin: -5mm -7mm 4mm;
-    padding: 5mm 7mm 4mm;
+    margin: -3mm -5mm 2.5mm;
+    padding: 2.3mm 5mm 2mm;
+    border-bottom-width: 1.5mm;
+  }
+
+  .personal-notice-page .notice-hero::before,
+  .personal-notice-page .notice-hero::after {
+    bottom: -1mm;
+    font-size: 16px;
+  }
+
+  .personal-notice-page .notice-kicker {
+    font-size: 8pt;
+    line-height: 1.2;
+  }
+
+  .personal-notice-page .notice-hero h1 {
+    margin: 0.8mm 0 0;
+    font-size: 16pt;
+    line-height: 1.15;
+  }
+
+  .personal-notice-page .notice-hero > p:last-child {
+    display: none;
   }
 
   .personal-notice-page .sheet {
     page: personal-notice;
     box-sizing: border-box;
     height: 140mm;
-    padding: 5mm 7mm 4mm;
+    padding: 3mm 5mm 2.5mm;
     overflow: hidden;
     border: 1px dashed #9aaa83;
     break-inside: avoid;
     page-break-inside: avoid;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+  }
+
+  .personal-notice-page .greeting {
+    margin-bottom: 1.8mm;
+    font-size: 9pt;
+    line-height: 1.35;
+  }
+
+  .personal-notice-page .student-meta {
+    gap: 2mm;
+    margin-bottom: 2mm;
+  }
+
+  .personal-notice-page .student-meta > div {
+    padding: 1.2mm 2mm;
+    border-radius: 3mm;
+  }
+
+  .personal-notice-page .student-meta span {
+    margin: 0;
+    font-size: 7.5pt;
+    line-height: 1.2;
+  }
+
+  .personal-notice-page .student-meta strong {
+    font-size: 10pt;
+    line-height: 1.3;
+  }
+
+  .personal-notice-page .club-day-grid {
+    gap: 3mm;
+  }
+
+  .personal-notice-page .day-card {
+    padding: 2.5mm;
+    border-radius: 4mm;
+  }
+
+  .personal-notice-page .day-pill,
+  .personal-notice-page .result-pill {
+    min-height: 5.5mm;
+    padding: 0.8mm 2mm;
+    font-size: 8pt;
+  }
+
+  .personal-notice-page .day-card h2 {
+    min-height: 0;
+    margin: 2mm 0 1.5mm;
+    font-size: 13pt;
+    line-height: 1.25;
+  }
+
+  .personal-notice-page .club-facts > div {
+    padding: 0.8mm 0;
+  }
+
+  .personal-notice-page .club-facts dt {
+    font-size: 7pt;
+    line-height: 1.2;
+  }
+
+  .personal-notice-page .club-facts dd {
+    margin-top: 0.4mm;
+    font-size: 9pt;
+    line-height: 1.25;
+  }
+
+  .personal-notice-page .notice-footer {
+    margin-top: 2mm;
+    padding-top: 1.5mm;
+    font-size: 7.5pt;
+    line-height: 1.25;
   }
 
   .personal-notice-page .sheet:nth-of-type(2n) {

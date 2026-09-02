@@ -267,5 +267,7 @@ const printCss = await readFile(new URL('../print.css', import.meta.url), 'utf8'
 assert.match(printCss, /@page personal-notice/);
 assert.match(printCss, /\.personal-notice-page \.sheet \{[\s\S]*?height:\s*140mm;/);
 assert.match(printCss, /\.personal-notice-page \.sheet:nth-of-type\(2n\)[\s\S]*?page-break-after:\s*always;/);
+assert.match(printCss, /\.personal-notice-page \.notice-hero > p:last-child \{\s*display:\s*none;/);
+assert.match(printCss, /\.personal-notice-page \.notice-hero h1 \{[\s\S]*?font-size:\s*16pt;/);
 
 console.log('Integration test passed: public and manual registration, duplicate protection, validation, admin auth, review, individual notices, class notices, and club rosters.');
