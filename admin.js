@@ -139,14 +139,25 @@ async function printSelectedNotices() {
 }
 
 async function openPrintable(path, fallbackMessage, options = {}) {
+  const printWindow = window.open('', '_blank');
+  if (!printWindow) {
+    setMessage('瀏覽器阻擋了列印視窗，請允許本站開啟彈出式視窗後再試一次。', 'error');
+    return;
+  }
+  printWindow.document.open();
+  printWindow.document.write('<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><title>正在產生通知單</title></head><body style="font-family:Microsoft JhengHei,sans-serif;padding:40px;color:#315d2d"><p>正在產生通知單，請稍候…</p></body></html>');
+  printWindow.document.close();
   try {
     const response = await fetch(path, { ...options, headers: { authorization: `Bearer ${adminSession}`, ...(options.headers || {}) } });
     if (!response.ok) { const data = await response.json(); throw new Error(data.error || fallbackMessage); }
     const html = await response.text();
-    const url = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
-    window.open(url, '_blank', 'noopener');
-    setTimeout(() => URL.revokeObjectURL(url), 60_000);
+    printWindow.document.open();
+    printWindow.document.write(html);
+    printWindow.document.close();
+    printWindow.opener = null;
+    setMessage('通知單已在新分頁開啟，請按「列印／另存 PDF」。', 'success');
   } catch (error) {
+    printWindow.close();
     setMessage(error.message, 'error');
   }
 }
