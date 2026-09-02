@@ -14,7 +14,7 @@ export async function onRequestGet({ request, env }) {
     headers: {
       'content-type': 'text/html; charset=utf-8',
       'cache-control': 'no-store',
-      'content-security-policy': "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'self' data: https:; base-uri 'none'; form-action 'none'",
+      'content-security-policy': "default-src 'none'; style-src 'self' 'unsafe-inline'; script-src 'none'; img-src 'self' data: https:; base-uri 'none'; form-action 'none'",
       'x-content-type-options': 'nosniff',
     },
   });

@@ -138,6 +138,21 @@ async function printSelectedNotices() {
   });
 }
 
+function wirePrintableWindow(printWindow) {
+  const printDocument = printWindow.document;
+  const printButton = printDocument.querySelector('[data-print-button]');
+  if (printButton) printButton.addEventListener('click', () => {
+    printWindow.focus();
+    printWindow.print();
+  });
+  const filter = printDocument.querySelector('[data-sheet-filter]');
+  if (filter) filter.addEventListener('change', () => {
+    printDocument.querySelectorAll('[data-print-sheet]').forEach((sheet) => {
+      sheet.classList.toggle('filtered-out', filter.value !== 'all' && sheet.id !== filter.value);
+    });
+  });
+}
+
 async function openPrintable(path, fallbackMessage, options = {}) {
   const printWindow = window.open('', '_blank');
   if (!printWindow) {
@@ -154,6 +169,7 @@ async function openPrintable(path, fallbackMessage, options = {}) {
     printWindow.document.open();
     printWindow.document.write(html);
     printWindow.document.close();
+    wirePrintableWindow(printWindow);
     printWindow.opener = null;
     setMessage('通知單已在新分頁開啟，請按「列印／另存 PDF」。', 'success');
   } catch (error) {

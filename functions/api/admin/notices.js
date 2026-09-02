@@ -22,7 +22,7 @@ export async function onRequestPost({ request, env }) {
       headers: {
         'content-type': 'text/html; charset=utf-8',
         'cache-control': 'no-store',
-        'content-security-policy': "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; base-uri 'none'; form-action 'none'",
+        'content-security-policy': "default-src 'none'; style-src 'self' 'unsafe-inline'; script-src 'none'; base-uri 'none'; form-action 'none'",
         'x-content-type-options': 'nosniff',
       },
     });

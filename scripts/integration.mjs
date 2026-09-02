@@ -141,6 +141,8 @@ assert.ok(printedHtml.includes('二年忠班'));
 assert.ok(!printedHtml.includes('<img'));
 assert.ok(printedHtml.includes('http://local/print.css'));
 assert.ok(printedHtml.includes('class="personal-notice-page"'));
+assert.ok(printedHtml.includes('data-print-button'));
+assert.ok(!printedHtml.includes('onclick='));
 
 const classPrinted = await classNotices({ request: new Request('http://local/api/admin/class-notices', { headers: adminHeaders }), env });
 assert.equal(classPrinted.status, 200);
@@ -164,6 +166,9 @@ assert.ok(classPrintedHtml.includes('class="name-only"'));
 assert.ok(classPrintedHtml.includes('每位學生報名彙整'));
 assert.ok(classPrintedHtml.includes('星期三報名／結果'));
 assert.ok(classPrintedHtml.includes('星期五報名／結果'));
+assert.ok(classPrintedHtml.includes('data-sheet-filter'));
+assert.ok(classPrintedHtml.includes('data-print-button'));
+assert.ok(!classPrintedHtml.includes('<script>'));
 assert.equal(CLUB_MAP.get('flute').location, '音樂教室');
 assert.equal(CLUB_MAP.get('diabolo').location, '活動中心');
 assert.equal(CLUB_MAP.get('young-english').location, '多功能教室');
@@ -183,6 +188,9 @@ assert.ok(clubRosterHtml.includes('<th>開始日期</th>'));
 assert.ok(clubRosterHtml.includes('<th>地點</th>'));
 assert.ok(clubRosterHtml.includes('本名單僅列已錄取學生'));
 assert.ok(!clubRosterHtml.includes('家長電子郵件'));
+assert.ok(clubRosterHtml.includes('data-sheet-filter'));
+assert.ok(clubRosterHtml.includes('data-print-button'));
+assert.ok(!clubRosterHtml.includes('<script>'));
 
 const secondSubmitted = await register({ request: post('http://local/api/register', { studentName: '第二位學生', grade: '3年級', className: '甲班', studentId: 'A223456781', guardianPhone: '0912345678', guardianEmail: 'parent2@example.com', clubs: ['flute', 'table-tennis'] }), env });
 assert.equal(secondSubmitted.status, 201);
