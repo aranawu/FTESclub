@@ -205,16 +205,16 @@ body.club-roster-page {
 
 .personal-notice-page .sheet {
   max-width: 790px;
-  min-height: 255mm;
+  min-height: 0;
   margin: 28px auto;
-  padding: 42px;
+  padding: 30px 34px 24px;
   overflow: hidden;
 }
 
 .personal-notice-page .notice-hero {
   position: relative;
-  margin: -42px -42px 24px;
-  padding: 34px 42px 28px;
+  margin: -30px -34px 18px;
+  padding: 24px 34px 20px;
   text-align: center;
   color: #fff;
   background: linear-gradient(145deg, #4f873e, #76a746);
@@ -250,7 +250,7 @@ body.club-roster-page {
 }
 
 .personal-notice-page .notice-hero h1 {
-  font-size: 30px;
+  font-size: 26px;
   letter-spacing: 0.08em;
 }
 
@@ -259,7 +259,7 @@ body.club-roster-page {
 }
 
 .personal-notice-page .greeting {
-  margin: 0 0 16px;
+  margin: 0 0 10px;
   color: #53634b;
   text-align: center;
 }
@@ -268,11 +268,11 @@ body.club-roster-page {
   display: grid;
   grid-template-columns: 1.2fr 1fr 1.2fr;
   gap: 10px;
-  margin-bottom: 18px;
+  margin-bottom: 12px;
 }
 
 .personal-notice-page .student-meta > div {
-  padding: 11px 14px;
+  padding: 8px 10px;
   text-align: center;
   background: #f2f7e6;
   border: 1px solid #d5e2b8;
@@ -292,7 +292,7 @@ body.club-roster-page {
 
 .personal-notice-page .student-meta strong {
   color: var(--field-green-dark);
-  font-size: 17px;
+  font-size: 15px;
 }
 
 .personal-notice-page .club-day-grid {
@@ -308,8 +308,8 @@ body.club-roster-page {
 }
 
 .personal-notice-page .day-card {
-  min-height: 270px;
-  padding: 17px;
+  min-height: 0;
+  padding: 13px;
   background: #f8fbef;
   border: 2px solid #bdd49a;
   border-radius: 22px;
@@ -365,10 +365,10 @@ body.club-roster-page {
 }
 
 .personal-notice-page .day-card h2 {
-  min-height: 58px;
-  margin: 19px 0 12px;
+  min-height: 44px;
+  margin: 12px 0 8px;
   color: var(--field-green-dark);
-  font-size: 21px;
+  font-size: 18px;
   line-height: 1.35;
 }
 
@@ -377,7 +377,7 @@ body.club-roster-page {
 }
 
 .personal-notice-page .club-facts > div {
-  padding: 9px 0;
+  padding: 6px 0;
   border-top: 1px dashed #c2cfac;
 }
 
@@ -397,8 +397,8 @@ body.club-roster-page {
   display: flex;
   justify-content: space-between;
   gap: 16px;
-  margin-top: 24px;
-  padding-top: 13px;
+  margin-top: 12px;
+  padding-top: 8px;
   color: #68745d;
   border-top: 1px dashed #b9c7a1;
   font-size: 12px;
@@ -554,6 +554,11 @@ body.club-roster-page {
 }
 
 @media print {
+  @page personal-notice {
+    size: A4 portrait;
+    margin: 8mm;
+  }
+
   body.class-notice-page,
   body.personal-notice-page,
   body.club-roster-page {
@@ -579,7 +584,31 @@ body.club-roster-page {
   }
 
   .personal-notice-page .notice-hero {
-    margin: 0 0 18px;
+    margin: -5mm -7mm 4mm;
+    padding: 5mm 7mm 4mm;
+  }
+
+  .personal-notice-page .sheet {
+    page: personal-notice;
+    box-sizing: border-box;
+    height: 140mm;
+    padding: 5mm 7mm 4mm;
+    overflow: hidden;
+    border: 1px dashed #9aaa83;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .personal-notice-page .sheet:nth-of-type(2n) {
+    break-after: page;
+    page-break-after: always;
+  }
+
+  .personal-notice-page .sheet:last-child {
+    break-after: auto;
+    page-break-after: auto;
   }
 
   .class-notice-page .student-overview-section,

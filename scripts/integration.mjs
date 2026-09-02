@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import { onRequestPost as register } from '../functions/api/register.js';
 import { onRequestPost as login } from '../functions/api/admin/login.js';
 import { onRequestGet as list, onRequestPost as manualRegister } from '../functions/api/admin/registrations.js';
@@ -261,5 +262,10 @@ assert.ok(batchPrintedHtml.includes('測試學生'));
 assert.ok(batchPrintedHtml.includes('第二位學生'));
 assert.equal((batchPrintedHtml.match(/class="sheet"/g) || []).length, 2);
 assert.ok(batchPrintedHtml.includes('列印／另存 PDF（共 2 位）'));
+
+const printCss = await readFile(new URL('../print.css', import.meta.url), 'utf8');
+assert.match(printCss, /@page personal-notice/);
+assert.match(printCss, /\.personal-notice-page \.sheet \{[\s\S]*?height:\s*140mm;/);
+assert.match(printCss, /\.personal-notice-page \.sheet:nth-of-type\(2n\)[\s\S]*?page-break-after:\s*always;/);
 
 console.log('Integration test passed: public and manual registration, duplicate protection, validation, admin auth, review, individual notices, class notices, and club rosters.');
