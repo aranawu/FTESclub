@@ -9,6 +9,7 @@ import { onRequestGet as clubRosters } from '../functions/api/admin/club-rosters
 import { onRequestPost as batchNotices } from '../functions/api/admin/notices.js';
 import { CLASS_BY_GRADE, CLUB_MAP } from '../lib/clubs.js';
 import { resultEmail } from '../lib/email.js';
+import { printableNotice } from '../lib/notice.js';
 
 class Statement {
   constructor(db, sql) { this.db = db; this.sql = sql.replace(/\s+/g, ' ').trim(); this.args = []; }
@@ -143,6 +144,19 @@ assert.ok(consolidatedEmail.includes('星期五'));
 assert.ok(consolidatedEmail.includes('直笛音樂社'));
 assert.ok(consolidatedEmail.includes('玉山英語社'));
 assert.ok(!consolidatedEmail.includes('身分證識別'));
+
+const singleDayRegistration = {
+  ...rejectedDecisionData.registration,
+  choices: rejectedDecisionData.registration.choices.filter((choice) => choice.club.day === '三'),
+};
+const singleDayEmail = resultEmail(singleDayRegistration, '測試國小').html;
+assert.ok(singleDayEmail.includes('星期三'));
+assert.ok(!singleDayEmail.includes('星期五'));
+assert.ok(!singleDayEmail.includes('未報名'));
+const singleDayNotice = printableNotice(singleDayRegistration, '測試國小', 'http://local/print.css');
+assert.ok(singleDayNotice.includes('星期三'));
+assert.ok(!singleDayNotice.includes('星期五'));
+assert.ok(!singleDayNotice.includes('未報名'));
 
 const printed = await notice({ request: new Request(`http://local/api/admin/notice?registrationNo=${submission.registrationNo}`, { headers: adminHeaders }), env });
 assert.equal(printed.status, 200);

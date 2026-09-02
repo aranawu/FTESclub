@@ -301,6 +301,12 @@ body.club-roster-page {
   gap: 14px;
 }
 
+.personal-notice-page .club-day-grid .day-card:only-child {
+  grid-column: 1 / -1;
+  width: min(100%, 430px);
+  margin: 0 auto;
+}
+
 .personal-notice-page .day-card {
   min-height: 270px;
   padding: 17px;
@@ -312,13 +318,6 @@ body.club-roster-page {
 .personal-notice-page .day-friday {
   background: #fffaf0;
   border-color: #efd27c;
-}
-
-.personal-notice-page .day-empty {
-  color: #7b816f;
-  background: #f5f4ee;
-  border-color: #d6d4c8;
-  border-style: dashed;
 }
 
 .personal-notice-page .day-card > header {
@@ -365,11 +364,6 @@ body.club-roster-page {
   background: #bc6262;
 }
 
-.personal-notice-page .result-pill.empty {
-  color: #6f7467;
-  background: #e5e3da;
-}
-
 .personal-notice-page .day-card h2 {
   min-height: 58px;
   margin: 19px 0 12px;
@@ -397,11 +391,6 @@ body.club-roster-page {
   margin: 3px 0 0;
   color: #344231;
   font-weight: 700;
-}
-
-.personal-notice-page .empty-copy {
-  margin-top: 32px;
-  text-align: center;
 }
 
 .personal-notice-page .notice-footer {
