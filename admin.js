@@ -231,16 +231,29 @@ async function printSelectedNotices() {
 
 function wirePrintableWindow(printWindow) {
   const printDocument = printWindow.document;
-  const printButton = printDocument.querySelector('[data-print-button]');
-  if (printButton) printButton.addEventListener('click', () => {
+  const runPrint = () => {
     printWindow.focus();
     printWindow.print();
-  });
+  };
+  const printButton = printDocument.querySelector('[data-print-button]');
+  if (printButton) printButton.addEventListener('click', runPrint);
   const filter = printDocument.querySelector('[data-sheet-filter]');
-  if (filter) filter.addEventListener('change', () => {
+  const applyFilter = () => {
     printDocument.querySelectorAll('[data-print-sheet]').forEach((sheet) => {
       sheet.classList.toggle('filtered-out', filter.value !== 'all' && sheet.id !== filter.value);
     });
+  };
+  if (filter) {
+    filter.addEventListener('change', applyFilter);
+    applyFilter();
+  }
+  const printCurrentButton = printDocument.querySelector('[data-print-current]');
+  if (printCurrentButton) printCurrentButton.addEventListener('click', runPrint);
+  const printAllButton = printDocument.querySelector('[data-print-all]');
+  if (printAllButton) printAllButton.addEventListener('click', () => {
+    printDocument.querySelectorAll('[data-print-sheet]').forEach((sheet) => sheet.classList.remove('filtered-out'));
+    runPrint();
+    if (filter) applyFilter();
   });
 }
 

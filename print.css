@@ -96,9 +96,10 @@ body.club-roster-page {
 }
 
 .class-notice-page .sheet {
-  width: min(195mm, calc(100% - 32px));
+  width: min(277mm, calc(100% - 32px));
+  min-height: 190mm;
   margin: 28px auto;
-  padding: 12mm;
+  padding: 9mm;
 }
 
 .class-notice-page .sheet > header {
@@ -202,6 +203,93 @@ body.club-roster-page {
   padding-top: 8px;
   border-top: 1px dashed #b9c7a1;
 }
+
+.class-notice-page .class-summary {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.class-notice-page .class-summary span {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.class-notice-page .class-summary .accepted {
+  color: #27633b;
+  background: #e8f4e4;
+}
+
+.class-notice-page .class-summary .attention {
+  color: #755a00;
+  background: #fff2bf;
+}
+
+.class-notice-page .class-summary .rejected {
+  color: #873b3b;
+  background: #f9e1e1;
+}
+
+.class-notice-page .class-summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.class-notice-page .class-summary-table th,
+.class-notice-page .class-summary-table td {
+  height: 31px;
+  padding: 5px 4px;
+  text-align: center;
+  vertical-align: middle;
+  border: 1px solid #829276;
+  font-size: 11px;
+}
+
+.class-notice-page .class-summary-table .day-heading.wednesday {
+  background: #e3f2d7;
+}
+
+.class-notice-page .class-summary-table .day-heading.friday {
+  background: #fff0bd;
+}
+
+.class-notice-page .class-summary-table .col-sequence { width: 4%; }
+.class-notice-page .class-summary-table .col-class { width: 9%; }
+.class-notice-page .class-summary-table .col-student { width: 10%; }
+.class-notice-page .class-summary-table .col-club { width: 20%; }
+.class-notice-page .class-summary-table .col-result { width: 7%; }
+.class-notice-page .class-summary-table .col-location { width: 10%; }
+
+.class-notice-page .club-detail strong,
+.class-notice-page .club-detail small {
+  display: block;
+}
+
+.class-notice-page .club-detail small {
+  margin-top: 2px;
+  color: #63715c;
+  font-size: 9px;
+}
+
+.class-notice-page .status-chip {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.class-notice-page .status-chip.accepted { color: #fff; background: #4c8a49; }
+.class-notice-page .status-chip.pending,
+.class-notice-page .status-chip.waitlist { color: #654f00; background: #ffe17a; }
+.class-notice-page .status-chip.rejected { color: #fff; background: #bc6262; }
+.class-notice-page .location-cell,
+.class-notice-page .student { font-weight: 700; }
+.class-notice-page .empty-choice { background: #fafaf7; }
 
 .personal-notice-page .sheet {
   max-width: 790px;
